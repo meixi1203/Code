@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../lib/libcommunication.a  CMakeFiles/communication.dir/callback_manager.cpp.o CMakeFiles/communication.dir/front_engine.pb.cc.o CMakeFiles/communication.dir/request_manager.cpp.o
+/usr/bin/ranlib ../lib/libcommunication.a

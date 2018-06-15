@@ -1,0 +1,225 @@
+syntax = "proto3";
+
+package FrontEngine;
+
+message enums {
+
+enum OrderStatus {     
+NONE_ORDER_STATUS = 0;
+TO_BE_REPORTED = 1;
+REPORTED = 2;
+PARTIAL_TRADED = 3;
+PARTIAL_CANCELED = 4;
+TRADED = 5;
+REJECTED = 6;
+};
+
+enum CoinType
+{
+NONE_COIN_TYPE = 0;
+BTC = 1;
+ETH = 2;
+BUSD = 3;
+
+};
+
+enum RequestType{
+NONE_REQUEST_TYPE=0;
+CreateAccountRequest=1;
+QueryBalanceRequest=2;
+QueryFeeRequest=3;
+QueryOrderRequest=4;
+QueryOrdersRequest=5;
+SendCoinRequest=6;
+RecieveCoinRequest=7;
+};
+
+enum CallBackType{
+NONE_CALLBACK_TYPE=0;
+CreateAccountCallBack=1;
+QueryBalanceCallBack=2;
+QueryFeeCallBack=3;
+QueryOrderCallBack=4;
+QueryOrdersCallBack=5;
+TradedCallBack=6;
+CanceledCallBack=7;
+RejectedCallBack=8;
+};
+
+};
+
+message Order {
+  string order_id = 1;
+  enums.CoinType type=2;
+  string from_address = 3;
+  string to_address = 4;
+  string description = 5;
+  string amount = 6;
+  string fee=7;
+  int32 order_date = 8;
+  int32 order_time = 9;
+  enums.OrderStatus status = 10;
+};
+
+message CoinInfo
+{
+    enums.CoinType type=1;
+    string ch_name=2;
+    string en_name=3;
+    double base_fee=4;
+
+};
+
+message CoinCapital
+{
+	string address=1;
+    enums.CoinType type=2;
+    string amount=3;
+    string frozen_amount=4;
+
+};
+
+message UserInfo
+{
+    enums.CoinType type=1;
+    string username=2;
+    string password=3;
+    string address=4;
+
+};
+//创建账户
+message CreateAccountRequest{
+string request_id=1;
+enums.CoinType coin_type=2;
+string username=3;
+string password=4;
+};
+message CreateAccountCallBack{
+string request_id=1;
+UserInfo account=2;
+int32 errorCode=3;
+string error=4;
+};
+//查账目
+message QueryBalanceRequest{
+string request_id=1;
+enums.CoinType coin_type=2;
+string address=3;
+};
+message QueryBalanceCallBack{
+string request_id=1;
+CoinCapital capital=2;
+int32 errorCode=3;
+string error=4;
+};
+//查手续费
+message QueryFeeRequest{
+string request_id=1;
+enums.CoinType coin_type=2;
+};
+message QueryFeeCallBack{
+string request_id=1;
+enums.CoinType coin_type=2;
+string fee=3;
+int32 errorCode=4;
+string error=5;
+};
+//查订单
+message QueryOrderRequest{
+string request_id=1;
+enums.CoinType coin_type=2;
+string order_id=3;
+};
+message QueryOrderCallBack{
+string request_id=1;
+Order order=2;
+int32 errorCode=3;
+string error=4;
+};
+//查订单
+message QueryOrdersRequest{
+string request_id=1;
+enums.CoinType coin_type=2;
+string address=3;
+Order order=4;
+};
+message QueryOrdersCallBack{
+string request_id=1;
+repeated Order order=2;
+int32 length=3;
+int32 errorCode=4;
+string error=5;
+};
+//转账
+message SendCoinRequest{
+string request_id=1;
+enums.CoinType coin_type=2;
+string from_address=3;
+string from_pwd=4;
+string to_address=5;
+string description=6;
+string amount=7;
+Order order=8;
+};
+//接收
+message RecieveCoinRequest{
+string request_id=1;
+enums.CoinType coin_type=2;
+string from_address=3;
+string from_pwd=4;
+string to_address=5;
+string description=6;
+string amount=7;
+Order order=8;
+};
+//已成回调
+message TradedCallBack{
+string request_id=1;
+Order order=2;
+int32 errorCode=3;
+string error=4;
+};
+//撤单回调
+message CanceledCallBack{
+string request_id=1;
+Order order=2;
+int32 errorCode=3;
+string error=4;
+};
+//拒单回调
+message RejectedCallBack{
+string request_id=1;
+Order order=2;
+int32 errorCode=3;
+string error=4;
+};
+message RequestMessage{
+string request_id=1;
+string client_id=2;
+string front_id=3;
+enums.RequestType type=4;
+CreateAccountRequest account=5;
+QueryBalanceRequest balance=6;
+QueryFeeRequest fee=7;
+QueryOrderRequest order=8;
+QueryOrdersRequest orders=9;
+SendCoinRequest send_info=10;
+RecieveCoinRequest recieve_info=11;
+
+};
+
+message CallBackMessage{
+string request_id=1;
+string client_id=2;
+string front_id=3;
+enums.CallBackType type=4;
+CreateAccountCallBack account=5;
+QueryBalanceCallBack balance=6;
+QueryFeeCallBack fee=7;
+QueryOrderCallBack order=8;
+QueryOrdersCallBack orders=9;
+TradedCallBack traded_info=10;
+CanceledCallBack canceled_info=11;
+RejectedCallBack rejected_info=12;
+
+}
