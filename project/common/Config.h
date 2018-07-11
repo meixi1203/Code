@@ -1,12 +1,11 @@
 //Config.h  
 #pragma once  
 
-#include <string>  
-#include <map>  
-#include <iostream>  
-#include <fstream>  
-#include <sstream>  
-
+#include <string>
+#include <map>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 /*
 * \brief Generic configuration Class
@@ -181,15 +180,14 @@ bool Config::ReadInto(T& var, const std::string& key, const T& value) const
 	return found;
 }
 
-
 template<class T>
 void Config::Add(const std::string& in_key, const T& value)
 {
 	// Add a key with given value  
 	std::string v = T_as_string(value);
 	std::string key = in_key;
-	trim(key);
-	trim(v);
+	Trim(key);
+	Trim(v);
 	m_Contents[key] = v;
 	return;
 }

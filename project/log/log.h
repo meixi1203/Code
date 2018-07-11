@@ -10,12 +10,9 @@
 #include <log4cplus/loggingmacros.h>
 #include <log4cplus/helpers/stringhelper.h>
 
-#define TRACE_LOG(p) LOG4CPLUS_TRACE(walletfront::log::LoggerInstance(), p)
 #define DEBUG_LOG(p) LOG4CPLUS_DEBUG(walletfront::log::LoggerInstance(), p)
-#define NOTICE_LOG(p) LOG4CPLUS_INFO(walletfront::log::LoggerInstance(), p)
-#define WARNING_LOG(p) LOG4CPLUS_WARN(walletfront::log::LoggerInstance(), p)
-#define FATAL_LOG(p) LOG4CPLUS_ERROR(walletfront::log::LoggerInstance(), p)
-#define TRACE_METHOD_LOG(p) LOG4CPLUS_TRACE_METHOD(walletfront::log::LoggerInstance(), p)
+#define INFO_LOG(p)  LOG4CPLUS_INFO(walletfront::log::LoggerInstance(), p)
+#define ERROR_LOG(p) LOG4CPLUS_ERROR(walletfront::log::LoggerInstance(), p)
 
 namespace walletfront {
 
@@ -29,7 +26,9 @@ class log
 
     private:
         log();
-        virtual ~log();
+        ~log();
+        log(const log&);
+        log& operator=(const log&);
 };
 }
-#endif
+#endif //LOG_H

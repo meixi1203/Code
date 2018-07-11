@@ -32,6 +32,8 @@ QueryOrderRequest=4;
 QueryOrdersRequest=5;
 SendCoinRequest=6;
 RecieveCoinRequest=7;
+HeartBeatRequest=8;
+CheckAppId=9;
 };
 
 enum CallBackType{
@@ -44,6 +46,8 @@ QueryOrdersCallBack=5;
 TradedCallBack=6;
 CanceledCallBack=7;
 RejectedCallBack=8;
+HeartBeatCallBack=9;
+CheckAppIdCallBack=10;
 };
 
 };
@@ -87,6 +91,32 @@ message UserInfo
     string address=4;
 
 };
+
+message HeartBeatRequest
+{
+    string request_id=1;
+    string data=2;
+}
+
+message HeartBeatCallBack
+{
+    string request_id=1;
+    string data=2;
+}
+
+message CheckAppId
+{
+    string request_id=1;
+    string app_id=2;
+}
+
+message CheckAppIdCallBack
+{
+    string request_id=1;
+    string app_id=2;
+    string sdk_id=3;
+}
+
 //创建账户
 message CreateAccountRequest{
 string request_id=1;
@@ -197,29 +227,33 @@ message RequestMessage{
 string request_id=1;
 string client_id=2;
 string front_id=3;
-enums.RequestType type=4;
-CreateAccountRequest account=5;
-QueryBalanceRequest balance=6;
-QueryFeeRequest fee=7;
-QueryOrderRequest order=8;
-QueryOrdersRequest orders=9;
-SendCoinRequest send_info=10;
-RecieveCoinRequest recieve_info=11;
-
+string md5 = 4;
+enums.RequestType type=5;
+CreateAccountRequest account=6;
+QueryBalanceRequest balance=7;
+QueryFeeRequest fee=8;
+QueryOrderRequest order=9;
+QueryOrdersRequest orders=10;
+SendCoinRequest send_info=11;
+RecieveCoinRequest recieve_info=12;
+HeartBeatRequest heart_beat=13;
+CheckAppId app_id=14; 
 };
 
 message CallBackMessage{
 string request_id=1;
 string client_id=2;
 string front_id=3;
-enums.CallBackType type=4;
-CreateAccountCallBack account=5;
-QueryBalanceCallBack balance=6;
-QueryFeeCallBack fee=7;
-QueryOrderCallBack order=8;
-QueryOrdersCallBack orders=9;
-TradedCallBack traded_info=10;
-CanceledCallBack canceled_info=11;
-RejectedCallBack rejected_info=12;
-
+string md5 = 4;
+enums.CallBackType type=5;
+CreateAccountCallBack account=6;
+QueryBalanceCallBack balance=7;
+QueryFeeCallBack fee=8;
+QueryOrderCallBack order=9;
+QueryOrdersCallBack orders=10;
+TradedCallBack traded_info=11;
+CanceledCallBack canceled_info=12;
+RejectedCallBack rejected_info=13;
+HeartBeatCallBack heart_beat=14;
+CheckAppIdCallBack app_id=15;
 }

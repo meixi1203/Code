@@ -1,7 +1,6 @@
 #include "log.h"
 
-#define DEFAULT_CONFIG_FILE_PATH "/mnt/e/wallet_front/project/log/log.properties"
-
+#define DEFAULT_CONFIG_FILE_PATH "log/log.properties"
 
 namespace walletfront {
 
@@ -18,7 +17,6 @@ log::~log()
 void log::OpenConfigFile()
 {
     log4cplus::initialize();
-
     log4cplus::Logger root = log4cplus::Logger::getRoot();
     log4cplus::PropertyConfigurator::doConfigure(LOG4CPLUS_TEXT(DEFAULT_CONFIG_FILE_PATH));
 }

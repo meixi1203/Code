@@ -8,23 +8,28 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/communication)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/socket)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/log)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/common)
 
 #添加子目录
 ADD_SUBDIRECTORY(communication)
 ADD_SUBDIRECTORY(socket)
 ADD_SUBDIRECTORY(log)
+ADD_SUBDIRECTORY(common)
+ADD_SUBDIRECTORY(key_center)
+ADD_SUBDIRECTORY(gtest)
 
 #添加库文件搜索路径
 LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/sdk) 
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR}/lib)
 
+SET(LIBRARIES  common log socket communication liblog4cplus.so libzmq.a libprotobuf.a libprotoc.a libprotobuf-lite.a)
+
 #用于将当前目录下的所有源文件的名字保存在变量 APP_SRC 中
 AUX_SOURCE_DIRECTORY(. APP_SRC)
 
 #编译出一个可执行文件且命名为wallet_front
-#ADD_EXECUTABLE(Main ${APP_SRC})
-ADD_EXECUTABLE(wallet_front main.cpp ${PROJECT_SOURCE_DIR}/communication/front_engine.pb.cc )
+ADD_EXECUTABLE(wallet_front main.cpp)
 
-TARGET_LINK_LIBRARIES(wallet_front log socket communication liblog4cplus.so  libzmq.so libprotobuf.so libprotoc.so libprotobuf-lite.so)
+TARGET_LINK_LIBRARIES(wallet_front ${LIBRARIES})
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)

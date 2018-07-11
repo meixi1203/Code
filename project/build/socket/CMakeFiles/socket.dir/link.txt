@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../lib/libsocket.a  CMakeFiles/socket.dir/data_manager.cpp.o CMakeFiles/socket.dir/wallet_front_socket.cpp.o
-/usr/bin/ranlib ../lib/libsocket.a

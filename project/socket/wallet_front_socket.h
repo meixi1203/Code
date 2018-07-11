@@ -7,8 +7,8 @@
 
 #include "wallet_front_base.h"
 #include <sys/epoll.h>
-#include <vector>
 
+#define EPOLL_EVENTS_NUM 1024
 
 namespace walletfront {
 
@@ -20,24 +20,31 @@ class Socket
 
     public:
         void ServiceStart();
-        void ServiceEpollRun();
-        int ReadData(int socket, char recv_buf[]);
-        int WriteData(int socket, const char* send_buf);
+        void SocketInit();
+        void EpollRun();
+        int    ReadData(int socket, char recv_buf[]);
+        int    WriteData(int socket, const char* send_buf);
+        void SendMessage();
 
     private:
         void ServiceBind();
         void ServiceListen();
-        int ServiceAccept();
-        bool SetEpollEvent(int op, int events, int socket);
+        void EpollPrepare();
         void SetNBlock(int sock);
-        void ServiceEpollPrepare();
+        void SendMsg(int socket);
+        int    ServiceAccept();
+        bool SetEpollEvent(int op, int events, int socket);
+
+    private:
+            Socket(const Socket&);
+            Socket& operator=(const Socket&);
 
     private:
         int m_port;
         std::string m_ip;
         int m_service_sock;
         int m_epfd;
-        struct epoll_event m_events[20];
+        struct epoll_event m_events[EPOLL_EVENTS_NUM];
 };
 
 }

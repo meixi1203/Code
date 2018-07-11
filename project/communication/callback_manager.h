@@ -17,15 +17,15 @@ class CallBackManager
 
     public:
         void ZmqSub();
+        void CallBackManagerInit();
 
     private:
         void OnResponse(const char *message);
+        CallBackManager(const CallBackManager&);
+        CallBackManager& operator=(const CallBackManager&);
 
-    private:
-        std::string m_ip;
-        std::string m_port;
 };
 
 }
 
-#endif
+#endif //CALLBACK_MANAGER_H

@@ -3,16 +3,16 @@
 */
 
 #include "callback_manager.h"
-# include "data_manager.h"
+#include "data_manager.h"
+#include "common.h"
 #include "zmq/zmq.hpp"
 #include "log.h"
+#include <thread>
 
 namespace walletfront {
 
 CallBackManager::CallBackManager()
 {
-    this->m_port = "5555";
-    this->m_ip = "tcp://localhost:5555";
 
 }
 
@@ -21,11 +21,17 @@ CallBackManager::~CallBackManager()
 
 }
 
+void CallBackManager::CallBackManagerInit()
+{
+    std::thread callback_thread(&CallBackManager::ZmqSub, this);
+    callback_thread.detach();
+}
+
 void CallBackManager::ZmqSub()
 {
     zmq::context_t context(1);
     zmq::socket_t subscriber(context, ZMQ_SUB);
-    subscriber.connect(m_ip.c_str());
+    subscriber.connect(walletfront::Common::GetInstance()->GetPubService().c_str());
     const char *filter = "";
 
     subscriber.setsockopt( ZMQ_SUBSCRIBE, filter, strlen(filter));
@@ -34,10 +40,8 @@ void CallBackManager::ZmqSub()
     {
         zmq::message_t rev;
         subscriber.recv(&rev);
-
         if(rev.size() == MESSAGE_BODY_SIZE && rev.data() != NULL)
         {
-            DataManager::GetInstance()->CallBackQueuePush((char *)rev.data());
             OnResponse((char *)rev.data());
         }
     }
@@ -47,12 +51,12 @@ void CallBackManager::OnResponse(const char *message)
 {
     if(message == NULL)
     {
-        FATAL_LOG("message == NULL");
+        ERROR_LOG("message == NULL");
         return;
     }
+    //TODO
+    //DataManager::GetInstance()->CallBackQueuePush("sdk_id", message);
 
-    std::string str(message);
-    TRACE_LOG("message = " <<  str);
 }
 
 }

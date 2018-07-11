@@ -2,7 +2,7 @@
 # Copyright (c) 2018 Yixi. All rights reserved.
 */
 
-# include "data_manager.h"
+#include "data_manager.h"
 #include "log.h"
 #include <string.h>
 
@@ -10,13 +10,13 @@ namespace walletfront {
 
 DataManager* DataManager::GetInstance()
 {
-    static DataManager * date_mannger = new DataManager();
+    static DataManager * pDateMmannger = new DataManager();
 
-    if(date_mannger == NULL)
+    if(pDateMmannger == NULL)
     {
-        TRACE_LOG("GetInstance serror msg_queue == NULL ");
+        ERROR_LOG("GetInstance serror msg_queue == NULL ");
     }
-    return date_mannger;
+    return pDateMmannger;
 }
 
 DataManager::DataManager()
@@ -29,110 +29,137 @@ DataManager::~DataManager()
 
 }
 
-bool DataManager::RecvQueuePush(const char buff[])
+bool DataManager::RecvQueuePush(const int &socket, const char buff[])
 {
-    char temp_buf[MESSAGE_BODY_SIZE] =  { '\0' };
-    memcpy(temp_buf, buff, MESSAGE_BODY_SIZE);
-    m_recv_queue.push(temp_buf);
-
+    struct RecvBuff temp_buff;
+    temp_buff.socket = socket;
+    std::string temp_str(buff, MESSAGE_BODY_SIZE);
+    temp_buff.msg = temp_str;
+    m_recv_queue.enqueue(temp_buff);
     return true;
 }
 
-bool DataManager::RecvQueueBack(char buff[])
+bool DataManager::RecvQueueBack(int &socket, char buff[])
 {
-    memcpy(buff, m_recv_queue.back(), MESSAGE_BODY_SIZE);
-    m_recv_queue.pop();
+    struct RecvBuff temp_buff;
+    m_recv_queue.wait_dequeue(temp_buff);
+    socket = temp_buff.socket;
+    memcpy(buff, temp_buff.msg.c_str(), MESSAGE_BODY_SIZE);
     return true;
 }
 
-bool DataManager::CallBackQueuePush(const char buff[])
+bool DataManager::CallBackQueuePush(const std::string &sdk_id, const char buff[])
 {
-    char temp_buf[MESSAGE_BODY_SIZE] =  { '\0' };
-    memcpy(temp_buf, buff, MESSAGE_BODY_SIZE);
-    m_callback_queue.push(temp_buf);
-
+    std::string temp_str(buff,MESSAGE_BODY_SIZE);
+    m_callback_queue[sdk_id].enqueue(temp_str);
     return true;
 }
 
-bool DataManager::CallBackQueueBack(char buff[])
+bool DataManager::CallBackQueueBack(const std::string &sdk_id, char buff[])
 {
-    memcpy(buff, m_callback_queue.back(), MESSAGE_BODY_SIZE);
-    m_callback_queue.pop();
-
+    std::string temp_str;
+    m_callback_queue[sdk_id].wait_dequeue(temp_str);
+    memcpy(buff, temp_str.c_str(), MESSAGE_BODY_SIZE);
     return true;
 }
 
-bool DataManager::ClientInfoMapInsert(int sdk_id, struct ClientInfo &client_info)
+bool DataManager::CBQueuePush(const int &socket, const char buff[])
 {
-    bool ret = false;
-    std::pair<std::map<int, struct ClientInfo>::iterator, bool> insert_pair;
+    std::string temp_str(buff,MESSAGE_BODY_SIZE);
+    m_cb_for_checkappid[socket].enqueue(temp_str);
+    return true;
+}
 
-    insert_pair = m_client_info.insert(std::pair<int, struct ClientInfo>(sdk_id, client_info));
+bool DataManager::CBQueueBack(const int &socket, char buff[])
+{
+    std::string temp_str;
+    m_cb_for_checkappid[socket].wait_dequeue(temp_str);
+    memcpy(buff, temp_str.c_str(), MESSAGE_BODY_SIZE);
+    return true;
+}
 
-    if(insert_pair.second == true)
+bool DataManager::ClientInfoMapInsert(const int &socket, const std::string &sdk_id, const int &port, const std::string &ip)
+{
+    struct ClientInfo client_info;
+    client_info.ip = ip;
+    client_info.port = port;
+    client_info.sdk_id = sdk_id;
+    m_client_info[socket] = client_info;
+
+    /**************************m_client_info inert start*******************/
+    INFO_LOG(" m_client_info   socket = " << socket);
+    INFO_LOG(" m_client_info   sdk_id = " << client_info.sdk_id);
+    INFO_LOG(" m_client_info   ip = " << client_info.ip);
+    INFO_LOG(" m_client_info   port = " << client_info.port);
+    INFO_LOG(" m_client_info   current socket size = " << m_client_info.size());
+    /*****************************m_client_info inert end*******************/
+    return true;
+}
+
+bool DataManager::ClientInfoMapUpdate(const int &socket, const std::string &sdk_id)
+{
+    m_client_info[socket].sdk_id = sdk_id;
+    return true;
+}
+
+bool DataManager::ClientInfoMapErase(const std::string &sdk_id)
+{
+    bool bRet = false;
+    std::map<int, struct ClientInfo>::iterator iter;
+
+    for(iter = m_client_info.begin(); iter != m_client_info.end(); iter++)
     {
-        ret = true;
+        if(iter->second.sdk_id == sdk_id)
+        {
+            /**************************m_client_info inert start*******************/
+            INFO_LOG(" m_client_info   socket = " << iter->first);
+            INFO_LOG(" m_client_info   sdk_id = " << iter->second.sdk_id);
+            INFO_LOG(" m_client_info   ip = " << iter->second.ip);
+            INFO_LOG(" m_client_info   port = " << iter->second.port);
+            INFO_LOG(" m_client_info   current socket size = " << m_client_info.size());
+            /***************************m_client_info inert end*******************/
+            m_client_info.erase(iter);
+            bRet = true;
+            break;
+        }
     }
-    return ret;
+    return bRet;
 }
 
-int DataManager::GetClientInfoMapCount(int index)
+bool DataManager::ClientInfoMapErase(const int &socket)
 {
-    int count = -1;
-
-    if (index  >= 0 )
-    {
-        int sdk_id = GetClientInfoMapSdkId(index);
-        count = m_client_info[sdk_id].count;
-    }
-
-    return count;
-}
-
-int DataManager::GetClientInfoMapSdkId(int index)
-{
-    int sdk_id = -1;
-
-    std::map<int, struct ClientInfo>::iterator iter = m_client_info.begin();
-    while(index--  >= 0 )
-    {
-       iter++;
-    }
+    bool bRet = false;
+    std::map<int, struct ClientInfo>::iterator iter;
+    iter = m_client_info.find(socket);
 
     if(iter != m_client_info.end())
     {
-        sdk_id = iter->first;
+        /**************************m_client_info inert start*******************/
+        INFO_LOG(" m_client_info   socket = " << iter->first);
+        INFO_LOG(" m_client_info   sdk_id = " << iter->second.sdk_id);
+        INFO_LOG(" m_client_info   ip = " << iter->second.ip);
+        INFO_LOG(" m_client_info   port = " << iter->second.port);
+        INFO_LOG(" m_client_info   current socket size = " << m_client_info.size());
+         /**************************m_client_info inert end*******************/
+        m_client_info.erase(iter);
+        bRet = true;
     }
-
-    return sdk_id;
+    return bRet;
 }
 
-bool DataManager::SetClientInfoMapCount(int index)
+std::string DataManager::ClientInfoMapFind(const int &socket)
 {
-    bool ret = false;
+    std::string ret("");
+    std::map<int, struct ClientInfo>::iterator iter;
+    iter = m_client_info.find(socket);
 
-    if (index  >= 0 )
+    if(iter != m_client_info.end())
     {
-        int sdk_id = GetClientInfoMapSdkId(index);
-        m_client_info[sdk_id].count++;
-        ret = true;
+       ret = iter->second.sdk_id;
     }
+    //INFO_LOG(" find   sdk_id = " << ret);
 
     return ret;
-}
-
-bool DataManager::ClearClientInfoMapCount(int sdk_id)
-{
-    bool ret = false;
-
-    if(sdk_id >0 )
-    {
-        m_client_info[sdk_id].count = 0;
-        ret = true;
-    }
-
-    return ret;
-
 }
 
 }

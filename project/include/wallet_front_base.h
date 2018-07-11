@@ -15,8 +15,21 @@ struct ClientInfo
 {
     int port;
     std::string ip;
-    int count;  // for Heart-Beat
-    bool status; // client status
+    std::string sdk_id;
+};
+
+struct ConfigFile
+{
+    std::string wallet_server_ip;
+    std::string wallet_server_port;
+    std::string push_server;
+    std::string pull_server;
+};
+
+struct RecvBuff
+{
+    int socket;
+    std::string msg;
 };
 
 }
