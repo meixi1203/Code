@@ -23,6 +23,12 @@ class SendManager
         void CheckAppid_Ok();
         void ReqHeartBeat();
         void ReqCreatAccount();
+        void ReqQueryBalance();
+        void ReqQueryFee();
+        void ReqQueryOrder();
+        void ReqQueryOrders();
+        void ReqSendCoin();
+        void ReqRecieveCoin();
         std::string ChangeIntToStr();
         
     private:

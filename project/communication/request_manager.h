@@ -37,8 +37,15 @@ class RequestManager
         void RequestQueryOrders(FrontEngine::RequestMessage &req_message);
         void RequestSendCoin(FrontEngine::RequestMessage &req_message);
         void RequestRecieveCoin(FrontEngine::RequestMessage &req_message);
+        // for tests IF start
+        void CreatAccountCallBack(FrontEngine::RequestMessage &message);
+        void QueryBalanceCallBack(FrontEngine::RequestMessage &message);
+        void QueryFeeCallBack(FrontEngine::RequestMessage &cb_message);
+        void QueryOrderCallBack(FrontEngine::RequestMessage &message);
+        void QueryOrdersCallBack(FrontEngine::RequestMessage &message);
+        void TradedCallBack(FrontEngine::RequestMessage &message);
+        // for tests IF end
         bool CheckMd5(char *message);
-        bool SetMd5(char *message);
         bool SetHeartBeatCount(const std::string &sdk_id);
 
         RequestManager(const RequestManager&);

@@ -13,6 +13,8 @@
 #include <thread>
 #include <unistd.h>
 
+#define FORTESTS
+
 namespace walletfront {
 
 RequestManager::RequestManager() : m_pCallBack(NULL)
@@ -148,6 +150,7 @@ void RequestManager::HeartBeatHandler()
 
 void RequestManager::SendManage(const char *message)
 {
+    #if 0
     zmq::context_t context(1);
     zmq::socket_t sender(context, ZMQ_PUSH);
     sender.bind(walletfront::Common::GetInstance()->GetPushService().c_str()); // TBD
@@ -158,6 +161,7 @@ void RequestManager::SendManage(const char *message)
 
     sender.send(*query);
     INFO_LOG("wallet front send ok");
+    #endif
 }
 
 void RequestManager::CheckAppId(const int &socket, FrontEngine::RequestMessage &req_message)
@@ -190,7 +194,7 @@ void RequestManager::CheckAppId(const int &socket, FrontEngine::RequestMessage &
             pCheckAppIdCb->set_request_id(req_message.request_id());
             pCheckAppIdCb->set_app_id(pCheckAppId->app_id());
         }
-        DataManager::GetInstance()->ClientInfoMapUpdate(socket, req_message.request_id());// TODO where fromsdk id
+        DataManager::GetInstance()->ClientInfoMapUpdate(socket, req_message.client_id());// TODO where from sdk id
     }
     else  // appId not found
     {
@@ -202,11 +206,15 @@ void RequestManager::CheckAppId(const int &socket, FrontEngine::RequestMessage &
     }
     char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
     cb_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
-    SetMd5(sender_msg);
+
+    if(m_pCallBack)
+    {
+        m_pCallBack->SetMd5(sender_msg);
+    }
 
     if(ret)
     {
-        DataManager::GetInstance()->CallBackQueuePush(req_message.request_id(), sender_msg);
+        DataManager::GetInstance()->CallBackQueuePush(req_message.client_id(), sender_msg);
     }
     else
     {
@@ -222,16 +230,10 @@ void RequestManager::CheckAppId(const int &socket, FrontEngine::RequestMessage &
 
 void RequestManager::RequestHeartBeat(FrontEngine::RequestMessage &req_message)
 {
-    if(req_message.client_id().empty())
-    {
-        ERROR_LOG("req_message.client_id() is empty");
-        return;
-    }
-
     FrontEngine::HeartBeatRequest* pHeatBeat = req_message.mutable_heart_beat();
     if(pHeatBeat == NULL)
     {
-        ERROR_LOG("pCheckAppId == NULL");
+        ERROR_LOG("pHeatBeat == NULL");
         return;
     }
 
@@ -252,8 +254,12 @@ void RequestManager::RequestHeartBeat(FrontEngine::RequestMessage &req_message)
 
     char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
     cb_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
-    SetMd5(sender_msg);
-    DataManager::GetInstance()->CallBackQueuePush(req_message.request_id(), sender_msg);
+    if(m_pCallBack)
+    {
+        m_pCallBack->SetMd5(sender_msg);
+    }
+
+    DataManager::GetInstance()->CallBackQueuePush(req_message.client_id(), sender_msg);
 
     // free pHeatBeat pHeartBeatCb
     cb_message.release_heart_beat();
@@ -264,80 +270,249 @@ void RequestManager::RequestHeartBeat(FrontEngine::RequestMessage &req_message)
 
 void RequestManager::RequestCreatAccount(FrontEngine::RequestMessage &req_message)
 {
-    if(req_message.client_id().empty())
+    FrontEngine::CreateAccountRequest* pCreatAccount = req_message.mutable_account();
+    if(pCreatAccount == NULL)
     {
-        ERROR_LOG("req_message.client_id() is empty");
+        ERROR_LOG("pCreatAccount == NULL");
         return;
     }
 
-    FrontEngine::CreateAccountRequest* pcreat_account = req_message.mutable_account();
-    if(pcreat_account == NULL)
+    INFO_LOG("CreateAccountRequest request_id = " << pCreatAccount->request_id());
+    INFO_LOG("CreateAccountRequest username = " << pCreatAccount->username());
+    INFO_LOG("CreateAccountRequest password = " << pCreatAccount->password());
+    INFO_LOG("CreateAccountRequest coin_type = " << pCreatAccount->coin_type());
+
+    char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
+    req_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
+    SendManage(sender_msg);
+
+    // free pHeatBeat pHeartBeatCb
+    req_message.release_account();
+    pCreatAccount = NULL;
+
+#ifdef FORTESTS
+    CreatAccountCallBack(req_message); // for tests IF
+#endif
+}
+
+void RequestManager::RequestQueryBalance(FrontEngine::RequestMessage &req_message)
+{
+    FrontEngine::QueryBalanceRequest* pQueryBlance = req_message.mutable_balance();
+    if(pQueryBlance == NULL)
+    {
+        ERROR_LOG("pQueryBlance == NULL");
+        return;
+    }
+
+    INFO_LOG("QueryBalanceRequest request_id = " << pQueryBlance->request_id());
+    INFO_LOG("QueryBalanceRequest address = " << pQueryBlance->address());
+    INFO_LOG("QueryBalanceRequest coin_type = " << pQueryBlance->coin_type());
+
+    //TODO
+    char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
+    req_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
+    SendManage(sender_msg);
+
+    req_message.release_balance();
+    pQueryBlance = NULL;
+
+#ifdef FORTESTS
+    QueryBalanceCallBack(req_message); // for tests IF
+#endif
+}
+
+void RequestManager::QueryFeeRequest(FrontEngine::RequestMessage &req_message)
+{
+    FrontEngine::QueryFeeRequest* pQueryFee = req_message.mutable_fee();
+    if(pQueryFee == NULL)
+    {
+        ERROR_LOG("pQueryFee == NULL");
+        return;
+    }
+
+    INFO_LOG("QueryFeeRequest request_id = " << pQueryFee->request_id());
+    INFO_LOG("QueryFeeRequest coin_type = " << pQueryFee->coin_type());
+
+    //TODO
+    char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
+    req_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
+    SendManage(sender_msg);
+
+    req_message.release_fee();
+    pQueryFee = NULL;
+
+#ifdef FORTESTS
+    QueryFeeCallBack(req_message); // for tests IF
+#endif
+}
+
+void RequestManager::RequestQueryOrder(FrontEngine::RequestMessage &req_message)
+{
+    FrontEngine::QueryOrderRequest* pQueryOrder = req_message.mutable_order();
+    if(pQueryOrder == NULL)
+    {
+        ERROR_LOG("pQueryOrder == NULL");
+        return;
+    }
+
+    INFO_LOG("QueryOrderRequest request_id = " << pQueryOrder->request_id());
+    INFO_LOG("QueryOrderRequest coin_type = " << pQueryOrder->coin_type());
+    INFO_LOG("QueryOrderRequest order_id = " << pQueryOrder->order_id());
+
+    //TODO
+    char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
+    req_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
+    SendManage(sender_msg);
+
+    req_message.release_order();
+    pQueryOrder = NULL;
+
+#ifdef FORTESTS
+    QueryOrderCallBack(req_message); // for tests IF
+#endif
+}
+
+void RequestManager::RequestQueryOrders(FrontEngine::RequestMessage &req_message)
+{
+    FrontEngine::QueryOrdersRequest* pQueryOrders = req_message.mutable_orders();
+    if(pQueryOrders == NULL)
     {
         ERROR_LOG("pCheckAppId == NULL");
         return;
     }
 
-    INFO_LOG("CreateAccountRequest request_id = " << pcreat_account->request_id());
-    INFO_LOG("CreateAccountRequest username = " << pcreat_account->username());
-    INFO_LOG("CreateAccountRequest password = " << pcreat_account->password());
-    INFO_LOG("CreateAccountRequest coin_type = " << pcreat_account->coin_type());
+    INFO_LOG("QueryOrdersRequest request_id = " << pQueryOrders->request_id());
+    INFO_LOG("QueryOrdersRequest coin_type = " << pQueryOrders->coin_type());
+    INFO_LOG("QueryOrdersRequest address = " << pQueryOrders->address());
+    FrontEngine::Order* pOrder = pQueryOrders->mutable_order();
+    if(pOrder == NULL)
+    {
+        ERROR_LOG("pOrder == NULL");
+        return;
+    }
 
-    char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
-    req_message.ParseFromArray(sender_msg, MESSAGE_BODY_SIZE);
-    SendManage(sender_msg);
+    INFO_LOG("QueryOrdersRequest order_id = " << pOrder->order_id());
+    INFO_LOG("QueryOrdersRequest type = " << pOrder->type());
+    INFO_LOG("QueryOrdersRequest from_address = " << pOrder->from_address());
+    INFO_LOG("QueryOrdersRequest to_address = " << pOrder->to_address());
+    INFO_LOG("QueryOrdersRequest description = " << pOrder->description());
+    INFO_LOG("QueryOrdersRequest amount = " << pOrder->amount());
+    INFO_LOG("QueryOrdersRequest fee = " << pOrder->fee());
+    INFO_LOG("QueryOrdersRequest order_date = " << pOrder->order_date());
+    INFO_LOG("QueryOrdersRequest order_time = " << pOrder->order_time());
+    INFO_LOG("QueryOrdersRequest status = " << pOrder->status());
+    pQueryOrders->release_order();
+    pOrder = NULL;
 
-    // free pHeatBeat pHeartBeatCb
-    req_message.release_account();
-    pcreat_account = NULL;
-}
-
-void RequestManager::RequestQueryBalance(FrontEngine::RequestMessage &req_message)
-{
     //TODO
     char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
-    req_message.ParseFromArray(sender_msg, MESSAGE_BODY_SIZE);
+    req_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
     SendManage(sender_msg);
 
-}
+    req_message.release_orders();
+    pQueryOrders = NULL;
 
-void RequestManager::QueryFeeRequest(FrontEngine::RequestMessage &req_message)
-{
-    //TODO
-    char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
-    req_message.ParseFromArray(sender_msg, MESSAGE_BODY_SIZE);
-    SendManage(sender_msg);
-}
-
-void RequestManager::RequestQueryOrder(FrontEngine::RequestMessage &req_message)
-{
-    //TODO
-    char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
-    req_message.ParseFromArray(sender_msg, MESSAGE_BODY_SIZE);
-    SendManage(sender_msg);
-}
-
-void RequestManager::RequestQueryOrders(FrontEngine::RequestMessage &req_message)
-{
-    //TODO
-    char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
-    req_message.ParseFromArray(sender_msg, MESSAGE_BODY_SIZE);
-    SendManage(sender_msg);
+#ifdef FORTESTS
+    QueryOrdersCallBack(req_message); // for tests IF
+#endif
 }
 
 void RequestManager::RequestSendCoin(FrontEngine::RequestMessage &req_message)
 {
+    FrontEngine::SendCoinRequest* pSendCoin = req_message.mutable_send_info();
+    if(pSendCoin == NULL)
+    {
+        ERROR_LOG("pSendCoin == NULL");
+        return;
+    }
+
+    INFO_LOG("RequestSendCoin request_id = " << pSendCoin->request_id());
+    INFO_LOG("RequestSendCoin coin_type = " << pSendCoin->coin_type());
+    INFO_LOG("RequestSendCoin from_address = " << pSendCoin->from_address());
+    INFO_LOG("RequestSendCoin from_pwd = " << pSendCoin->from_pwd());
+    INFO_LOG("RequestSendCoin to_address = " << pSendCoin->to_address());
+    INFO_LOG("RequestSendCoin description = " << pSendCoin->description());
+    INFO_LOG("RequestSendCoin amount = " << pSendCoin->amount());
+    FrontEngine::Order* pOrder = pSendCoin->mutable_order();
+    if(pOrder == NULL)
+    {
+        ERROR_LOG("pOrder == NULL");
+        return;
+    }
+
+    INFO_LOG("RequestSendCoin order_id = " << pOrder->order_id());
+    INFO_LOG("RequestSendCoin type = " << pOrder->type());
+    INFO_LOG("RequestSendCoin from_address = " << pOrder->from_address());
+    INFO_LOG("RequestSendCoin to_address = " << pOrder->to_address());
+    INFO_LOG("RequestSendCoin description = " << pOrder->description());
+    INFO_LOG("RequestSendCoin amount = " << pOrder->amount());
+    INFO_LOG("RequestSendCoin fee = " << pOrder->fee());
+    INFO_LOG("RequestSendCoin order_date = " << pOrder->order_date());
+    INFO_LOG("RequestSendCoin order_time = " << pOrder->order_time());
+    INFO_LOG("RequestSendCoin status = " << pOrder->status());
+    pSendCoin->release_order();
+    pOrder = NULL;
+
     //TODO
     char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
-    req_message.ParseFromArray(sender_msg, MESSAGE_BODY_SIZE);
+    req_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
     SendManage(sender_msg);
+
+    req_message.release_send_info();
+    pSendCoin = NULL;
+
+#ifdef FORTESTS
+    TradedCallBack(req_message); // for tests IF
+#endif
 }
 
 void RequestManager::RequestRecieveCoin(FrontEngine::RequestMessage &req_message)
 {
+    FrontEngine::RecieveCoinRequest* pRecieveCoin = req_message.mutable_recieve_info();
+    if(pRecieveCoin == NULL)
+    {
+        ERROR_LOG("pRecieveCoin == NULL");
+        return;
+    }
+
+    INFO_LOG("RequestRecieveCoin request_id = " << pRecieveCoin->request_id());
+    INFO_LOG("RequestRecieveCoin coin_type = " << pRecieveCoin->coin_type());
+    INFO_LOG("RequestRecieveCoin from_address = " << pRecieveCoin->from_address());
+    INFO_LOG("RequestRecieveCoin from_pwd = " << pRecieveCoin->from_pwd());
+    INFO_LOG("RequestRecieveCoin to_address = " << pRecieveCoin->to_address());
+    INFO_LOG("RequestRecieveCoin description = " << pRecieveCoin->description());
+    INFO_LOG("RequestRecieveCoin amount = " << pRecieveCoin->amount());
+    FrontEngine::Order* pOrder = pRecieveCoin->mutable_order();
+    if(pOrder == NULL)
+    {
+        ERROR_LOG("pOrder == NULL");
+        return;
+    }
+
+    INFO_LOG("RequestRecieveCoin order_id = " << pOrder->order_id());
+    INFO_LOG("RequestRecieveCoin type = " << pOrder->type());
+    INFO_LOG("RequestRecieveCoin from_address = " << pOrder->from_address());
+    INFO_LOG("RequestRecieveCoin to_address = " << pOrder->to_address());
+    INFO_LOG("RequestRecieveCoin description = " << pOrder->description());
+    INFO_LOG("RequestRecieveCoin amount = " << pOrder->amount());
+    INFO_LOG("RequestRecieveCoin fee = " << pOrder->fee());
+    INFO_LOG("RequestRecieveCoin order_date = " << pOrder->order_date());
+    INFO_LOG("RequestRecieveCoin order_time = " << pOrder->order_time());
+    INFO_LOG("RequestRecieveCoin status = " << pOrder->status());
+    pRecieveCoin->release_order();
+    pOrder = NULL;
+
     //TODO
     char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
-    req_message.ParseFromArray(sender_msg, MESSAGE_BODY_SIZE);
+    req_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
     SendManage(sender_msg);
+
+    req_message.release_recieve_info();
+    pRecieveCoin = NULL;
+
+#ifdef FORTESTS
+    TradedCallBack(req_message); // for tests IF
+#endif
 }
 
 bool RequestManager::CheckMd5(char *message)
@@ -369,26 +544,252 @@ bool RequestManager::CheckMd5(char *message)
     return ret;
 }
 
-bool RequestManager::SetMd5(char *message)
-{
-    std::string current_md5("");
-    MD5 md5(message, MESSAGE_BODY_SIZE);
-    current_md5 = md5.toString();
-
-    FrontEngine::CallBackMessage cb_message;
-    cb_message.ParseFromArray(message, MESSAGE_BODY_SIZE);
-    cb_message.set_md5(current_md5);
-
-    memset(message, 0, MESSAGE_BODY_SIZE);
-    cb_message.SerializeToArray(message, MESSAGE_BODY_SIZE);
-
-    return true;
-}
-
 bool RequestManager::SetHeartBeatCount(const std::string &sdk_id)
 {
     m_heat_mtux.lock();
     m_heat_count[sdk_id] = 0;
     m_heat_mtux.unlock();
 }
+
+void RequestManager::CreatAccountCallBack(FrontEngine::RequestMessage &message)
+{
+    FrontEngine::CallBackMessage cb_message;
+
+    cb_message.set_client_id(message.client_id());
+    cb_message.set_request_id(message.request_id());
+    cb_message.set_front_id(message.front_id());
+    cb_message.set_type(FrontEngine::enums_CallBackType::enums_CallBackType_CreateAccountCallBack);
+
+    FrontEngine::CreateAccountCallBack* pCreatAccount = cb_message.mutable_account();
+    FrontEngine::UserInfo* pUserInfo = pCreatAccount->mutable_account();
+
+    if(pCreatAccount)
+    {
+        pCreatAccount->set_request_id("pCreatAccount->set_request_id");
+        pCreatAccount->set_errorcode(1001);
+        pCreatAccount->set_error("pCreatAccount->set_error");
+        if(pUserInfo)
+        {
+            pUserInfo->set_type(FrontEngine::enums_CoinType::enums_CoinType_BTC);
+            pUserInfo->set_username("pUserInfo->set_username");
+            pUserInfo->set_password("pUserInfo->set_password");
+            pUserInfo->set_address("pUserInfo->set_address");
+        }
+    }
+
+    if(m_pCallBack)
+    {
+        m_pCallBack->SetMd5(cb_message);
+        m_pCallBack->SerializeToArray(cb_message);
+    }
+
+    pCreatAccount->release_account();
+    pUserInfo = NULL;
+    cb_message.release_account();
+    pCreatAccount = NULL;
+}
+
+void RequestManager::QueryBalanceCallBack(FrontEngine::RequestMessage &message)
+{
+    FrontEngine::CallBackMessage cb_message;
+
+    cb_message.set_client_id(message.client_id());
+    cb_message.set_request_id(message.request_id());
+    cb_message.set_front_id(message.front_id());
+    cb_message.set_type(FrontEngine::enums_CallBackType::enums_CallBackType_QueryBalanceCallBack);
+
+    FrontEngine::QueryBalanceCallBack* pQueryBalance = cb_message.mutable_balance();
+    FrontEngine::CoinCapital* pCoinCapital = pQueryBalance->mutable_capital();
+
+    if(pQueryBalance)
+    {
+        pQueryBalance->set_request_id("QueryBalance->request_id");
+        pQueryBalance->set_errorcode(1002);
+        pQueryBalance->set_error("pQueryBalance->error");
+        if(pCoinCapital)
+        {
+           pCoinCapital->set_address("pCoinCapital->address");
+           pCoinCapital->set_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
+           pCoinCapital->set_amount("pCoinCapital->amount");
+           pCoinCapital->set_frozen_amount("pCoinCapital->frozen_amount");
+        }
+    }
+
+    if(m_pCallBack)
+    {
+        m_pCallBack->SetMd5(cb_message);
+        m_pCallBack->SerializeToArray(cb_message);
+    }
+
+    pQueryBalance->release_capital();
+    pCoinCapital = NULL;
+    cb_message.release_balance();
+    pQueryBalance = NULL;
+}
+
+void RequestManager::QueryFeeCallBack(FrontEngine::RequestMessage &message)
+{
+    FrontEngine::CallBackMessage cb_message;
+
+    cb_message.set_client_id(message.client_id());
+    cb_message.set_request_id(message.request_id());
+    cb_message.set_front_id(message.front_id());
+    cb_message.set_type(FrontEngine::enums_CallBackType::enums_CallBackType_QueryFeeCallBack);
+
+    FrontEngine::QueryFeeCallBack* pQueryFee = cb_message.mutable_fee();
+
+    if(pQueryFee)
+    {
+        pQueryFee->set_request_id("pQueryFee->request_id");
+        pQueryFee->set_coin_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
+        pQueryFee->set_fee("pQueryFee->fee");
+        pQueryFee->set_errorcode(1003); 
+        pQueryFee->set_error("pQueryFee->error"); 
+    }
+
+    if(m_pCallBack)
+    {
+        m_pCallBack->SetMd5(cb_message);
+        m_pCallBack->SerializeToArray(cb_message);
+    }
+
+    cb_message.release_fee();
+    pQueryFee = NULL;
+}
+
+void RequestManager::QueryOrderCallBack(FrontEngine::RequestMessage &message)
+{
+    FrontEngine::CallBackMessage cb_message;
+
+    cb_message.set_client_id(message.client_id());
+    cb_message.set_request_id(message.request_id());
+    cb_message.set_front_id(message.front_id());
+    cb_message.set_type(FrontEngine::enums_CallBackType::enums_CallBackType_QueryOrderCallBack);
+
+    FrontEngine::QueryOrderCallBack* pQueryOrder = cb_message.mutable_order();
+    FrontEngine::Order* pOrder = pQueryOrder->mutable_order();
+
+    if(pQueryOrder)
+    {
+        pQueryOrder->set_request_id("pQueryOrder->request_id");
+        pQueryOrder->set_errorcode(1004);
+        pQueryOrder->set_error("pQueryOrder->error");
+        if(pOrder)
+        {
+            pOrder->set_order_id("pOrder->order_id");
+            pOrder->set_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
+            pOrder->set_from_address("pOrder->from_address");
+            pOrder->set_to_address("pOrder->to_address");
+            pOrder->set_description("pOrder->description");
+            pOrder->set_amount("pOrder->amount");
+            pOrder->set_fee("pOrder->fee");
+            pOrder->set_order_date(20170713);
+            pOrder->set_order_time(20170713);
+            pOrder->set_status(FrontEngine::enums_OrderStatus::enums_OrderStatus_TO_BE_REPORTED);
+        }
+    }
+
+    if(m_pCallBack)
+    {
+        m_pCallBack->SetMd5(cb_message);
+        m_pCallBack->SerializeToArray(cb_message);
+    }
+
+    pQueryOrder->release_order();
+    pOrder = NULL;
+    cb_message.release_order();
+    pQueryOrder = NULL;
+}
+
+void RequestManager::QueryOrdersCallBack(FrontEngine::RequestMessage &message)
+{
+    FrontEngine::CallBackMessage cb_message;
+
+    cb_message.set_client_id(message.client_id());
+    cb_message.set_request_id(message.request_id());
+    cb_message.set_front_id(message.front_id());
+    cb_message.set_type(FrontEngine::enums_CallBackType::enums_CallBackType_QueryOrdersCallBack);
+
+    FrontEngine::QueryOrdersCallBack* pQueryOrders = cb_message.mutable_orders();
+    FrontEngine::Order* pOrder = NULL;
+    if(pQueryOrders)
+    {
+        pQueryOrders->set_request_id("pQueryOrders->request_id");
+        pQueryOrders->set_errorcode(1005);
+        pQueryOrders->set_error("pQueryOrders->error");
+
+        for(int index = 0; index < 5; index++)
+        {
+            pOrder = pQueryOrders->add_order();
+            if(pOrder)
+            {
+                pOrder->set_order_id("pOrder->order_id");
+                pOrder->set_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
+                pOrder->set_from_address("pOrder->from_address");
+                pOrder->set_to_address("pOrder->to_address");
+                pOrder->set_description("pOrder->description");
+                pOrder->set_amount("pOrder->amount");
+                pOrder->set_fee("pOrder->fee");
+                pOrder->set_order_date(20170713);
+                pOrder->set_order_time(20170713);
+                pOrder->set_status(FrontEngine::enums_OrderStatus::enums_OrderStatus_TO_BE_REPORTED);
+            }
+        }
+    }
+
+    if(m_pCallBack)
+    {
+        m_pCallBack->SetMd5(cb_message);
+        m_pCallBack->SerializeToArray(cb_message);
+    }
+
+    cb_message.release_orders();
+    pQueryOrders = NULL;
+    pOrder = NULL;
+}
+
+void RequestManager::TradedCallBack(FrontEngine::RequestMessage &message)
+{
+    FrontEngine::CallBackMessage cb_message;
+
+    cb_message.set_client_id(message.client_id());
+    cb_message.set_request_id(message.request_id());
+    cb_message.set_front_id(message.front_id());
+    cb_message.set_type(FrontEngine::enums_CallBackType::enums_CallBackType_TradedCallBack);
+
+    FrontEngine::TradedCallBack* pTraded = cb_message.mutable_traded_info();
+    FrontEngine::Order* pOrder = pTraded->mutable_order();
+
+    if(pTraded)
+    {
+        pTraded->set_request_id("pTraded->request_id");
+        pTraded->set_errorcode(1006);
+        pTraded->set_error("pTraded->error");
+        if(pOrder)
+        {
+            pOrder->set_order_id("pOrder->order_id");
+            pOrder->set_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
+            pOrder->set_from_address("pOrder->from_address");
+            pOrder->set_to_address("pOrder->to_address");
+            pOrder->set_description("pOrder->description");
+            pOrder->set_amount("pOrder->amount");
+            pOrder->set_fee("pOrder->fee");
+            pOrder->set_order_date(20170713);
+            pOrder->set_order_time(20170713);
+            pOrder->set_status(FrontEngine::enums_OrderStatus::enums_OrderStatus_TO_BE_REPORTED);
+        }
+    }
+
+    if(m_pCallBack)
+    {
+        m_pCallBack->SetMd5(cb_message);
+        m_pCallBack->SerializeToArray(cb_message);
+    }
+
+    pTraded->release_order();
+    cb_message.release_traded_info();
+    pTraded = NULL;
+    pOrder = NULL;
+}
+
 }

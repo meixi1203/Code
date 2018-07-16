@@ -19,8 +19,16 @@ class CallBackManager
         void run();
         void OnResponse(const char * msg);
         bool CheckMD5(char * msg);
-        void HeatBeatCb(FrontEngine::CallBackMessage &cb_message);
-        void CheckAppidCb(FrontEngine::CallBackMessage &cb_message);
+        void HeatBeatCallBack(FrontEngine::CallBackMessage &cb_message);
+        void CheckAppIdCallBack(FrontEngine::CallBackMessage &cb_message);
+        void CreatAccountCallBack(FrontEngine::CallBackMessage &cb_message);
+        void QueryBalanceCallBack(FrontEngine::CallBackMessage &cb_message);
+        void QueryFeeCallBack(FrontEngine::CallBackMessage &cb_message);
+        void QueryOrderCallBack(FrontEngine::CallBackMessage &cb_message);
+        void QueryOrdersCallBack(FrontEngine::CallBackMessage &cb_message);
+        void TradedCallBack(FrontEngine::CallBackMessage &cb_message);
+        void CanceledCallBack(FrontEngine::CallBackMessage &cb_message);
+        void RejectedCallBack(FrontEngine::CallBackMessage &cb_message);
         
 
     private:

@@ -9,13 +9,13 @@ class TestDataManager:public testing::Test
     public:
         TestDataManager()
         {
-            pdata_manager = DataManager::GetInstance();
+            pDataManager = DataManager::GetInstance();
         }
         ~TestDataManager()
         {
-            if(pdata_manager)
+            if(pDataManager)
             {
-                pdata_manager = NULL;
+                pDataManager = NULL;
             }
         }
 
@@ -23,15 +23,15 @@ class TestDataManager:public testing::Test
         void SetUp()  {}
         void TearDown() {}
     private:
-        DataManager *pdata_manager;
+        DataManager *pDataManager;
 };
 
 TEST(TestDataManager, Pointer_TestDataManager)
 {
     TestDataManager *ptest = new TestDataManager();
     ASSERT_EQ(true, ptest != NULL);
-    ASSERT_EQ(true, ptest->pdata_manager != NULL);
+    ASSERT_EQ(true, ptest->pDataManager != NULL);
     TestDataManager test;
-    ASSERT_EQ(true, test.pdata_manager != NULL);
+    ASSERT_EQ(true, test.pDataManager != NULL);
 }
 }
