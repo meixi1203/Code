@@ -47,6 +47,8 @@ class RequestManager
         // for tests IF end
         bool CheckMd5(char *message);
         bool SetHeartBeatCount(const std::string &sdk_id);
+        bool RemoveSdkId(const std::string &sdk_id);
+        std::string MakeSdkId(const std::string &sdk_id, const int &socket);
 
         RequestManager(const RequestManager&);
         RequestManager& operator=(const RequestManager&);

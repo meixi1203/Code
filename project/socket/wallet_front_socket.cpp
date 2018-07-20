@@ -82,7 +82,7 @@ void Socket::SetNBlock(int sock)
 {
     int opts = 0;
 
-    opts = fcntl(sock, F_GETFL); //获取文件的flags值。
+    opts = fcntl(sock, F_GETFL); //获取文件的flags值
     if(opts < 0)
     {
         ERROR_LOG("fcntl l(sock,GETFL) error");
@@ -183,6 +183,13 @@ int Socket::ReadData(int socket, char recv_buf[])
             ERROR_LOG("SetEpollEvent error");
         }
     }
+    if(!DataManager::GetInstance()->CallBackQueueEmpty(socket))
+    {
+        if(!SetEpollEvent(EPOLL_CTL_MOD, EPOLLOUT, socket))
+        {
+            ERROR_LOG("SetEpollEvent error");
+        }
+    }
 
     return len;
 }
@@ -257,14 +264,14 @@ void Socket::SendMsg(int socket)
 
     while(DataManager::GetInstance()->CBQueueSize(socket) > 0)
     {   
-        INFO_LOG("CBQueueSize  =  " << DataManager::GetInstance()->CBQueueSize(socket));
+        INFO_LOG("CBQueueSize = " << DataManager::GetInstance()->CBQueueSize(socket));
         memset(recv_msg, 0, MESSAGE_BODY_SIZE);
         DataManager::GetInstance()->CBQueueBack(socket, recv_msg);
         WriteData(socket, recv_msg);
     }
     while(DataManager::GetInstance()->CallBackQueueSize(sdk_id) > 0)
     {
-        INFO_LOG("CallBackQueuesize  =  " << DataManager::GetInstance()->CallBackQueueSize(sdk_id)<<" sdk_id = " << sdk_id);
+        INFO_LOG("CallBack size = " << DataManager::GetInstance()->CallBackQueueSize(sdk_id)<<" sdk_id = " << sdk_id);
         memset(recv_msg, 0, MESSAGE_BODY_SIZE);
         DataManager::GetInstance()->CallBackQueueBack(sdk_id, recv_msg);
         WriteData(socket, recv_msg);

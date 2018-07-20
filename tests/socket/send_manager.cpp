@@ -27,10 +27,6 @@ SendManager::~SendManager()
 
 void SendManager::SendManagerInit()
 {
-    m_reqfun_vec.push_back(std::bind(&SendManager::CheckAppid_No, this));
-    m_reqfun_vec.push_back(std::bind(&SendManager::CheckAppid_Ok, this));
-    m_reqfun_vec.push_back(std::bind(&SendManager::ReqHeartBeat, this));
-    m_reqfun_vec.push_back(std::bind(&SendManager::ReqHeartBeat, this));
     m_reqfun_vec.push_back(std::bind(&SendManager::ReqCreatAccount, this));
     m_reqfun_vec.push_back(std::bind(&SendManager::ReqQueryBalance, this));
     m_reqfun_vec.push_back(std::bind(&SendManager::ReqQueryFee, this));
@@ -38,15 +34,44 @@ void SendManager::SendManagerInit()
     m_reqfun_vec.push_back(std::bind(&SendManager::ReqQueryOrders, this));
     m_reqfun_vec.push_back(std::bind(&SendManager::ReqSendCoin, this));
     m_reqfun_vec.push_back(std::bind(&SendManager::ReqRecieveCoin, this));
+
+    std::thread heart_thread(&SendManager::HeartBeatHandler, this);
+    heart_thread.detach();
+}
+
+void SendManager::HeartBeatHandler()
+{
+    while(1)
+    {
+        if(!DataManager::GetInstance()->GetSdkId().empty())
+        {
+            ReqHeartBeat();
+        }
+        else
+        {
+            sleep(1);
+        }
+        sleep(3);
+    }
 }
 
 void SendManager::run()
 {
+    CheckAppid_No();
+    CheckAppid_Ok();
+
     while(1)
     {
-        for(int v = 0; v < m_reqfun_vec.size(); v++)
+        if(!DataManager::GetInstance()->GetSdkId().empty())
         {
-            m_reqfun_vec[v]();
+            for(int v = 0; v < m_reqfun_vec.size(); v++)
+            {
+                m_reqfun_vec[v]();
+                sleep(1);
+            }
+        }
+        else
+        {
             sleep(1);
         }
     }
@@ -119,8 +144,8 @@ void SendManager::ReqHeartBeat()
     char sender_msg[MESSAGE_BODY_SIZE] = "";
 
     FrontEngine::RequestMessage req_message;
-    req_message.set_request_id(DataManager::GetInstance()->GetSdkId());
-    req_message.set_client_id(ChangeIntToStr());
+    req_message.set_request_id(ChangeIntToStr());
+    req_message.set_client_id(DataManager::GetInstance()->GetSdkId());
     req_message.set_front_id("front_id");
     req_message.set_md5(STRING_EMPTY);
     req_message.set_type(FrontEngine::enums_RequestType::enums_RequestType_HeartBeatRequest);
@@ -166,8 +191,8 @@ void SendManager::ReqCreatAccount()
     char sender_msg[MESSAGE_BODY_SIZE] = "";
 
     FrontEngine::RequestMessage req_message;
-    req_message.set_request_id(DataManager::GetInstance()->GetSdkId());
-    req_message.set_client_id(ChangeIntToStr());
+    req_message.set_request_id(ChangeIntToStr());
+    req_message.set_client_id(DataManager::GetInstance()->GetSdkId());
     req_message.set_front_id("front_id");
     req_message.set_md5(STRING_EMPTY);
     req_message.set_type(FrontEngine::enums_RequestType::enums_RequestType_CreateAccountRequest);
@@ -201,8 +226,8 @@ void SendManager::ReqQueryBalance()
     char sender_msg[MESSAGE_BODY_SIZE] = "";
 
     FrontEngine::RequestMessage req_message;
-    req_message.set_request_id(DataManager::GetInstance()->GetSdkId());
-    req_message.set_client_id(ChangeIntToStr());
+    req_message.set_request_id(ChangeIntToStr());
+    req_message.set_client_id(DataManager::GetInstance()->GetSdkId());
     req_message.set_front_id("front_id");
     req_message.set_md5(STRING_EMPTY);
     req_message.set_type(FrontEngine::enums_RequestType::enums_RequestType_QueryBalanceRequest);
@@ -235,8 +260,8 @@ void SendManager::ReqQueryFee()
      char sender_msg[MESSAGE_BODY_SIZE] = "";
 
     FrontEngine::RequestMessage req_message;
-    req_message.set_request_id(DataManager::GetInstance()->GetSdkId());
-    req_message.set_client_id(ChangeIntToStr());
+    req_message.set_request_id(ChangeIntToStr());
+    req_message.set_client_id(DataManager::GetInstance()->GetSdkId());
     req_message.set_front_id("front_id");
     req_message.set_md5(STRING_EMPTY);
     req_message.set_type(FrontEngine::enums_RequestType::enums_RequestType_QueryFeeRequest);
@@ -268,8 +293,8 @@ void SendManager::ReqQueryOrder()
     char sender_msg[MESSAGE_BODY_SIZE] = "";
 
     FrontEngine::RequestMessage req_message;
-    req_message.set_request_id(DataManager::GetInstance()->GetSdkId());
-    req_message.set_client_id(ChangeIntToStr());
+    req_message.set_request_id(ChangeIntToStr());
+    req_message.set_client_id(DataManager::GetInstance()->GetSdkId());
     req_message.set_front_id("front_id");
     req_message.set_md5(STRING_EMPTY);
     req_message.set_type(FrontEngine::enums_RequestType::enums_RequestType_QueryOrderRequest);
@@ -302,8 +327,8 @@ void SendManager::ReqQueryOrders()
     char sender_msg[MESSAGE_BODY_SIZE] = "";
 
     FrontEngine::RequestMessage req_message;
-    req_message.set_request_id(DataManager::GetInstance()->GetSdkId());
-    req_message.set_client_id(ChangeIntToStr());
+    req_message.set_request_id(ChangeIntToStr());
+    req_message.set_client_id(DataManager::GetInstance()->GetSdkId());
     req_message.set_front_id("front_id");
     req_message.set_md5(STRING_EMPTY);
     req_message.set_type(FrontEngine::enums_RequestType::enums_RequestType_QueryOrdersRequest);
@@ -352,8 +377,8 @@ void SendManager::ReqSendCoin()
     char sender_msg[MESSAGE_BODY_SIZE] = "";
 
     FrontEngine::RequestMessage req_message;
-    req_message.set_request_id(DataManager::GetInstance()->GetSdkId());
-    req_message.set_client_id(ChangeIntToStr());
+    req_message.set_request_id(ChangeIntToStr());
+    req_message.set_client_id(DataManager::GetInstance()->GetSdkId());
     req_message.set_front_id("front_id");
     req_message.set_md5(STRING_EMPTY);
     req_message.set_type(FrontEngine::enums_RequestType::enums_RequestType_SendCoinRequest);
@@ -406,8 +431,8 @@ void SendManager::ReqRecieveCoin()
     char sender_msg[MESSAGE_BODY_SIZE] = "";
 
     FrontEngine::RequestMessage req_message;
-    req_message.set_request_id(DataManager::GetInstance()->GetSdkId());
-    req_message.set_client_id(ChangeIntToStr());
+    req_message.set_request_id(ChangeIntToStr());
+    req_message.set_client_id(DataManager::GetInstance()->GetSdkId());
     req_message.set_front_id("front_id");
     req_message.set_md5(STRING_EMPTY);
     req_message.set_type(FrontEngine::enums_RequestType::enums_RequestType_RecieveCoinRequest);

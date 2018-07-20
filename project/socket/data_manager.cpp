@@ -63,6 +63,21 @@ bool DataManager::CallBackQueueBack(const std::string &sdk_id, char buff[])
     return true;
 }
 
+bool DataManager::CallBackQueueEmpty(const int &socket)
+{
+    bool bRet = true;
+    std::string sdk_id = ClientInfoMapFind(socket);
+
+    if(!sdk_id.empty())
+    {
+        if(CallBackQueueSize(sdk_id) > 0)
+        {
+            bRet = false;
+        }
+    }
+    return bRet;
+}
+
 bool DataManager::CBQueuePush(const int &socket, const char buff[])
 {
     std::string temp_str(buff,MESSAGE_BODY_SIZE);
@@ -86,13 +101,11 @@ bool DataManager::ClientInfoMapInsert(const int &socket, const std::string &sdk_
     client_info.sdk_id = sdk_id;
     m_client_info[socket] = client_info;
 
-    /**************************m_client_info inert start*******************/
     INFO_LOG(" m_client_info   socket = " << socket);
     INFO_LOG(" m_client_info   sdk_id = " << client_info.sdk_id);
     INFO_LOG(" m_client_info   ip = " << client_info.ip);
     INFO_LOG(" m_client_info   port = " << client_info.port);
     INFO_LOG(" m_client_info   current socket size = " << m_client_info.size());
-    /*****************************m_client_info inert end*******************/
     return true;
 }
 
@@ -111,17 +124,15 @@ bool DataManager::ClientInfoMapErase(const std::string &sdk_id)
     {
         if(iter->second.sdk_id == sdk_id)
         {
-            /**************************m_client_info inert start*******************/
             INFO_LOG(" m_client_info   socket = " << iter->first);
             INFO_LOG(" m_client_info   sdk_id = " << iter->second.sdk_id);
             INFO_LOG(" m_client_info   ip = " << iter->second.ip);
             INFO_LOG(" m_client_info   port = " << iter->second.port);
-            INFO_LOG(" m_client_info   current socket size = " << m_client_info.size());
-            /***************************m_client_info inert end*******************/
             m_client_info.erase(iter);
             bRet = true;
             break;
         }
+        INFO_LOG(" m_client_info   current socket size = " << m_client_info.size());
     }
     return bRet;
 }
@@ -134,16 +145,14 @@ bool DataManager::ClientInfoMapErase(const int &socket)
 
     if(iter != m_client_info.end())
     {
-        /**************************m_client_info inert start*******************/
         INFO_LOG(" m_client_info   socket = " << iter->first);
         INFO_LOG(" m_client_info   sdk_id = " << iter->second.sdk_id);
         INFO_LOG(" m_client_info   ip = " << iter->second.ip);
         INFO_LOG(" m_client_info   port = " << iter->second.port);
-        INFO_LOG(" m_client_info   current socket size = " << m_client_info.size());
-         /**************************m_client_info inert end*******************/
         m_client_info.erase(iter);
         bRet = true;
     }
+    INFO_LOG(" m_client_info   current socket size = " << m_client_info.size());
     return bRet;
 }
 

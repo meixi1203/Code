@@ -6,14 +6,14 @@
 
 #include <algorithm>
 
-#include "google/protobuf/stubs/common.h"
-#include "google/protobuf/stubs/once.h"
-#include "google/protobuf/io/coded_stream.h"
-#include "google/protobuf/wire_format_lite_inl.h"
-#include "google/protobuf/descriptor.h"
-#include "google/protobuf/generated_message_reflection.h"
-#include "google/protobuf/reflection_ops.h"
-#include "google/protobuf/wire_format.h"
+#include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/once.h>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/wire_format_lite_inl.h>
+#include <google/protobuf/descriptor.h>
+#include <google/protobuf/generated_message_reflection.h>
+#include <google/protobuf/reflection_ops.h>
+#include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
 namespace FrontEngine {
@@ -93,6 +93,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* CanceledCallBack_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   CanceledCallBack_reflection_ = NULL;
+const ::google::protobuf::Descriptor* CanceledRequest_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  CanceledRequest_reflection_ = NULL;
 const ::google::protobuf::Descriptor* RejectedCallBack_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   RejectedCallBack_reflection_ = NULL;
@@ -531,7 +534,23 @@ void protobuf_AssignDesc_front_5fengine_2eproto() {
       sizeof(CanceledCallBack),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CanceledCallBack, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CanceledCallBack, _is_default_instance_));
-  RejectedCallBack_descriptor_ = file->message_type(23);
+  CanceledRequest_descriptor_ = file->message_type(23);
+  static const int CanceledRequest_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CanceledRequest, request_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CanceledRequest, order_),
+  };
+  CanceledRequest_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      CanceledRequest_descriptor_,
+      CanceledRequest::default_instance_,
+      CanceledRequest_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(CanceledRequest),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CanceledRequest, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CanceledRequest, _is_default_instance_));
+  RejectedCallBack_descriptor_ = file->message_type(24);
   static const int RejectedCallBack_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RejectedCallBack, request_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RejectedCallBack, order_),
@@ -549,8 +568,8 @@ void protobuf_AssignDesc_front_5fengine_2eproto() {
       sizeof(RejectedCallBack),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RejectedCallBack, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RejectedCallBack, _is_default_instance_));
-  RequestMessage_descriptor_ = file->message_type(24);
-  static const int RequestMessage_offsets_[14] = {
+  RequestMessage_descriptor_ = file->message_type(25);
+  static const int RequestMessage_offsets_[15] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, request_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, client_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, front_id_),
@@ -563,6 +582,7 @@ void protobuf_AssignDesc_front_5fengine_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, orders_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, send_info_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, recieve_info_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, canceled_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, heart_beat_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, app_id_),
   };
@@ -577,7 +597,7 @@ void protobuf_AssignDesc_front_5fengine_2eproto() {
       sizeof(RequestMessage),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestMessage, _is_default_instance_));
-  CallBackMessage_descriptor_ = file->message_type(25);
+  CallBackMessage_descriptor_ = file->message_type(26);
   static const int CallBackMessage_offsets_[15] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CallBackMessage, request_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CallBackMessage, client_id_),
@@ -665,6 +685,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       CanceledCallBack_descriptor_, &CanceledCallBack::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      CanceledRequest_descriptor_, &CanceledRequest::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       RejectedCallBack_descriptor_, &RejectedCallBack::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       RequestMessage_descriptor_, &RequestMessage::default_instance());
@@ -721,6 +743,8 @@ void protobuf_ShutdownFile_front_5fengine_2eproto() {
   delete TradedCallBack_reflection_;
   delete CanceledCallBack::default_instance_;
   delete CanceledCallBack_reflection_;
+  delete CanceledRequest::default_instance_;
+  delete CanceledRequest_reflection_;
   delete RejectedCallBack::default_instance_;
   delete RejectedCallBack_reflection_;
   delete RequestMessage::default_instance_;
@@ -821,40 +845,43 @@ void protobuf_AddDesc_front_5fengine_2eproto() {
     "\n\terrorCode\030\003 \001(\005\022\r\n\005error\030\004 \001(\t\"k\n\020Canc"
     "eledCallBack\022\022\n\nrequest_id\030\001 \001(\t\022!\n\005orde"
     "r\030\002 \001(\0132\022.FrontEngine.Order\022\021\n\terrorCode"
-    "\030\003 \001(\005\022\r\n\005error\030\004 \001(\t\"k\n\020RejectedCallBac"
-    "k\022\022\n\nrequest_id\030\001 \001(\t\022!\n\005order\030\002 \001(\0132\022.F"
-    "rontEngine.Order\022\021\n\terrorCode\030\003 \001(\005\022\r\n\005e"
-    "rror\030\004 \001(\t\"\272\004\n\016RequestMessage\022\022\n\nrequest"
-    "_id\030\001 \001(\t\022\021\n\tclient_id\030\002 \001(\t\022\020\n\010front_id"
-    "\030\003 \001(\t\022\013\n\003md5\030\004 \001(\t\022,\n\004type\030\005 \001(\0162\036.Fron"
-    "tEngine.enums.RequestType\0222\n\007account\030\006 \001"
-    "(\0132!.FrontEngine.CreateAccountRequest\0221\n"
-    "\007balance\030\007 \001(\0132 .FrontEngine.QueryBalanc"
-    "eRequest\022)\n\003fee\030\010 \001(\0132\034.FrontEngine.Quer"
-    "yFeeRequest\022-\n\005order\030\t \001(\0132\036.FrontEngine"
-    ".QueryOrderRequest\022/\n\006orders\030\n \001(\0132\037.Fro"
-    "ntEngine.QueryOrdersRequest\022/\n\tsend_info"
-    "\030\013 \001(\0132\034.FrontEngine.SendCoinRequest\0225\n\014"
-    "recieve_info\030\014 \001(\0132\037.FrontEngine.Recieve"
-    "CoinRequest\0221\n\nheart_beat\030\r \001(\0132\035.FrontE"
-    "ngine.HeartBeatRequest\022\'\n\006app_id\030\016 \001(\0132\027"
-    ".FrontEngine.CheckAppId\"\200\005\n\017CallBackMess"
-    "age\022\022\n\nrequest_id\030\001 \001(\t\022\021\n\tclient_id\030\002 \001"
-    "(\t\022\020\n\010front_id\030\003 \001(\t\022\013\n\003md5\030\004 \001(\t\022-\n\004typ"
-    "e\030\005 \001(\0162\037.FrontEngine.enums.CallBackType"
-    "\0223\n\007account\030\006 \001(\0132\".FrontEngine.CreateAc"
-    "countCallBack\0222\n\007balance\030\007 \001(\0132!.FrontEn"
-    "gine.QueryBalanceCallBack\022*\n\003fee\030\010 \001(\0132\035"
-    ".FrontEngine.QueryFeeCallBack\022.\n\005order\030\t"
-    " \001(\0132\037.FrontEngine.QueryOrderCallBack\0220\n"
-    "\006orders\030\n \001(\0132 .FrontEngine.QueryOrdersC"
-    "allBack\0220\n\013traded_info\030\013 \001(\0132\033.FrontEngi"
-    "ne.TradedCallBack\0224\n\rcanceled_info\030\014 \001(\013"
-    "2\035.FrontEngine.CanceledCallBack\0224\n\rrejec"
-    "ted_info\030\r \001(\0132\035.FrontEngine.RejectedCal"
-    "lBack\0222\n\nheart_beat\030\016 \001(\0132\036.FrontEngine."
-    "HeartBeatCallBack\022/\n\006app_id\030\017 \001(\0132\037.Fron"
-    "tEngine.CheckAppIdCallBackb\006proto3", 4754);
+    "\030\003 \001(\005\022\r\n\005error\030\004 \001(\t\"H\n\017CanceledRequest"
+    "\022\022\n\nrequest_id\030\001 \001(\t\022!\n\005order\030\002 \001(\0132\022.Fr"
+    "ontEngine.Order\"k\n\020RejectedCallBack\022\022\n\nr"
+    "equest_id\030\001 \001(\t\022!\n\005order\030\002 \001(\0132\022.FrontEn"
+    "gine.Order\022\021\n\terrorCode\030\003 \001(\005\022\r\n\005error\030\004"
+    " \001(\t\"\352\004\n\016RequestMessage\022\022\n\nrequest_id\030\001 "
+    "\001(\t\022\021\n\tclient_id\030\002 \001(\t\022\020\n\010front_id\030\003 \001(\t"
+    "\022\013\n\003md5\030\004 \001(\t\022,\n\004type\030\005 \001(\0162\036.FrontEngin"
+    "e.enums.RequestType\0222\n\007account\030\006 \001(\0132!.F"
+    "rontEngine.CreateAccountRequest\0221\n\007balan"
+    "ce\030\007 \001(\0132 .FrontEngine.QueryBalanceReque"
+    "st\022)\n\003fee\030\010 \001(\0132\034.FrontEngine.QueryFeeRe"
+    "quest\022-\n\005order\030\t \001(\0132\036.FrontEngine.Query"
+    "OrderRequest\022/\n\006orders\030\n \001(\0132\037.FrontEngi"
+    "ne.QueryOrdersRequest\022/\n\tsend_info\030\013 \001(\013"
+    "2\034.FrontEngine.SendCoinRequest\0225\n\014reciev"
+    "e_info\030\014 \001(\0132\037.FrontEngine.RecieveCoinRe"
+    "quest\022.\n\010canceled\030\r \001(\0132\034.FrontEngine.Ca"
+    "nceledRequest\0221\n\nheart_beat\030\016 \001(\0132\035.Fron"
+    "tEngine.HeartBeatRequest\022\'\n\006app_id\030\017 \001(\013"
+    "2\027.FrontEngine.CheckAppId\"\200\005\n\017CallBackMe"
+    "ssage\022\022\n\nrequest_id\030\001 \001(\t\022\021\n\tclient_id\030\002"
+    " \001(\t\022\020\n\010front_id\030\003 \001(\t\022\013\n\003md5\030\004 \001(\t\022-\n\004t"
+    "ype\030\005 \001(\0162\037.FrontEngine.enums.CallBackTy"
+    "pe\0223\n\007account\030\006 \001(\0132\".FrontEngine.Create"
+    "AccountCallBack\0222\n\007balance\030\007 \001(\0132!.Front"
+    "Engine.QueryBalanceCallBack\022*\n\003fee\030\010 \001(\013"
+    "2\035.FrontEngine.QueryFeeCallBack\022.\n\005order"
+    "\030\t \001(\0132\037.FrontEngine.QueryOrderCallBack\022"
+    "0\n\006orders\030\n \001(\0132 .FrontEngine.QueryOrder"
+    "sCallBack\0220\n\013traded_info\030\013 \001(\0132\033.FrontEn"
+    "gine.TradedCallBack\0224\n\rcanceled_info\030\014 \001"
+    "(\0132\035.FrontEngine.CanceledCallBack\0224\n\rrej"
+    "ected_info\030\r \001(\0132\035.FrontEngine.RejectedC"
+    "allBack\0222\n\nheart_beat\030\016 \001(\0132\036.FrontEngin"
+    "e.HeartBeatCallBack\022/\n\006app_id\030\017 \001(\0132\037.Fr"
+    "ontEngine.CheckAppIdCallBackb\006proto3", 4876);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "front_engine.proto", &protobuf_RegisterTypes);
   enums::default_instance_ = new enums();
@@ -880,6 +907,7 @@ void protobuf_AddDesc_front_5fengine_2eproto() {
   RecieveCoinRequest::default_instance_ = new RecieveCoinRequest();
   TradedCallBack::default_instance_ = new TradedCallBack();
   CanceledCallBack::default_instance_ = new CanceledCallBack();
+  CanceledRequest::default_instance_ = new CanceledRequest();
   RejectedCallBack::default_instance_ = new RejectedCallBack();
   RequestMessage::default_instance_ = new RequestMessage();
   CallBackMessage::default_instance_ = new CallBackMessage();
@@ -906,6 +934,7 @@ void protobuf_AddDesc_front_5fengine_2eproto() {
   RecieveCoinRequest::default_instance_->InitAsDefaultInstance();
   TradedCallBack::default_instance_->InitAsDefaultInstance();
   CanceledCallBack::default_instance_->InitAsDefaultInstance();
+  CanceledRequest::default_instance_->InitAsDefaultInstance();
   RejectedCallBack::default_instance_->InitAsDefaultInstance();
   RequestMessage::default_instance_->InitAsDefaultInstance();
   CallBackMessage::default_instance_->InitAsDefaultInstance();
@@ -12932,6 +12961,357 @@ void CanceledCallBack::clear_error() {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int CanceledRequest::kRequestIdFieldNumber;
+const int CanceledRequest::kOrderFieldNumber;
+#endif  // !_MSC_VER
+
+CanceledRequest::CanceledRequest()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:FrontEngine.CanceledRequest)
+}
+
+void CanceledRequest::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+  order_ = const_cast< ::FrontEngine::Order*>(&::FrontEngine::Order::default_instance());
+}
+
+CanceledRequest::CanceledRequest(const CanceledRequest& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:FrontEngine.CanceledRequest)
+}
+
+void CanceledRequest::SharedCtor() {
+    _is_default_instance_ = false;
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  request_id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  order_ = NULL;
+}
+
+CanceledRequest::~CanceledRequest() {
+  // @@protoc_insertion_point(destructor:FrontEngine.CanceledRequest)
+  SharedDtor();
+}
+
+void CanceledRequest::SharedDtor() {
+  request_id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (this != default_instance_) {
+    delete order_;
+  }
+}
+
+void CanceledRequest::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* CanceledRequest::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CanceledRequest_descriptor_;
+}
+
+const CanceledRequest& CanceledRequest::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_front_5fengine_2eproto();
+  return *default_instance_;
+}
+
+CanceledRequest* CanceledRequest::default_instance_ = NULL;
+
+CanceledRequest* CanceledRequest::New(::google::protobuf::Arena* arena) const {
+  CanceledRequest* n = new CanceledRequest;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void CanceledRequest::Clear() {
+  request_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (GetArenaNoVirtual() == NULL && order_ != NULL) delete order_;
+  order_ = NULL;
+}
+
+bool CanceledRequest::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:FrontEngine.CanceledRequest)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string request_id = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_request_id()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->request_id().data(), this->request_id().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "FrontEngine.CanceledRequest.request_id"));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_order;
+        break;
+      }
+
+      // optional .FrontEngine.Order order = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_order:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_order()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:FrontEngine.CanceledRequest)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:FrontEngine.CanceledRequest)
+  return false;
+#undef DO_
+}
+
+void CanceledRequest::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:FrontEngine.CanceledRequest)
+  // optional string request_id = 1;
+  if (this->request_id().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->request_id().data(), this->request_id().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "FrontEngine.CanceledRequest.request_id");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->request_id(), output);
+  }
+
+  // optional .FrontEngine.Order order = 2;
+  if (this->has_order()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, *this->order_, output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:FrontEngine.CanceledRequest)
+}
+
+::google::protobuf::uint8* CanceledRequest::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:FrontEngine.CanceledRequest)
+  // optional string request_id = 1;
+  if (this->request_id().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->request_id().data(), this->request_id().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "FrontEngine.CanceledRequest.request_id");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->request_id(), target);
+  }
+
+  // optional .FrontEngine.Order order = 2;
+  if (this->has_order()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, *this->order_, target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:FrontEngine.CanceledRequest)
+  return target;
+}
+
+int CanceledRequest::ByteSize() const {
+  int total_size = 0;
+
+  // optional string request_id = 1;
+  if (this->request_id().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->request_id());
+  }
+
+  // optional .FrontEngine.Order order = 2;
+  if (this->has_order()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->order_);
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void CanceledRequest::MergeFrom(const ::google::protobuf::Message& from) {
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const CanceledRequest* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const CanceledRequest>(
+          &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void CanceledRequest::MergeFrom(const CanceledRequest& from) {
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  if (from.request_id().size() > 0) {
+
+    request_id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.request_id_);
+  }
+  if (from.has_order()) {
+    mutable_order()->::FrontEngine::Order::MergeFrom(from.order());
+  }
+}
+
+void CanceledRequest::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void CanceledRequest::CopyFrom(const CanceledRequest& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CanceledRequest::IsInitialized() const {
+
+  return true;
+}
+
+void CanceledRequest::Swap(CanceledRequest* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void CanceledRequest::InternalSwap(CanceledRequest* other) {
+  request_id_.Swap(&other->request_id_);
+  std::swap(order_, other->order_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata CanceledRequest::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = CanceledRequest_descriptor_;
+  metadata.reflection = CanceledRequest_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// CanceledRequest
+
+// optional string request_id = 1;
+void CanceledRequest::clear_request_id() {
+  request_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& CanceledRequest::request_id() const {
+  // @@protoc_insertion_point(field_get:FrontEngine.CanceledRequest.request_id)
+  return request_id_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CanceledRequest::set_request_id(const ::std::string& value) {
+  
+  request_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:FrontEngine.CanceledRequest.request_id)
+}
+ void CanceledRequest::set_request_id(const char* value) {
+  
+  request_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:FrontEngine.CanceledRequest.request_id)
+}
+ void CanceledRequest::set_request_id(const char* value, size_t size) {
+  
+  request_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:FrontEngine.CanceledRequest.request_id)
+}
+ ::std::string* CanceledRequest::mutable_request_id() {
+  
+  // @@protoc_insertion_point(field_mutable:FrontEngine.CanceledRequest.request_id)
+  return request_id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* CanceledRequest::release_request_id() {
+  
+  return request_id_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CanceledRequest::set_allocated_request_id(::std::string* request_id) {
+  if (request_id != NULL) {
+    
+  } else {
+    
+  }
+  request_id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), request_id);
+  // @@protoc_insertion_point(field_set_allocated:FrontEngine.CanceledRequest.request_id)
+}
+
+// optional .FrontEngine.Order order = 2;
+bool CanceledRequest::has_order() const {
+  return !_is_default_instance_ && order_ != NULL;
+}
+void CanceledRequest::clear_order() {
+  if (GetArenaNoVirtual() == NULL && order_ != NULL) delete order_;
+  order_ = NULL;
+}
+const ::FrontEngine::Order& CanceledRequest::order() const {
+  // @@protoc_insertion_point(field_get:FrontEngine.CanceledRequest.order)
+  return order_ != NULL ? *order_ : *default_instance_->order_;
+}
+::FrontEngine::Order* CanceledRequest::mutable_order() {
+  
+  if (order_ == NULL) {
+    order_ = new ::FrontEngine::Order;
+  }
+  // @@protoc_insertion_point(field_mutable:FrontEngine.CanceledRequest.order)
+  return order_;
+}
+::FrontEngine::Order* CanceledRequest::release_order() {
+  
+  ::FrontEngine::Order* temp = order_;
+  order_ = NULL;
+  return temp;
+}
+void CanceledRequest::set_allocated_order(::FrontEngine::Order* order) {
+  delete order_;
+  order_ = order;
+  if (order) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:FrontEngine.CanceledRequest.order)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int RejectedCallBack::kRequestIdFieldNumber;
 const int RejectedCallBack::kOrderFieldNumber;
 const int RejectedCallBack::kErrorCodeFieldNumber;
@@ -13445,6 +13825,7 @@ const int RequestMessage::kOrderFieldNumber;
 const int RequestMessage::kOrdersFieldNumber;
 const int RequestMessage::kSendInfoFieldNumber;
 const int RequestMessage::kRecieveInfoFieldNumber;
+const int RequestMessage::kCanceledFieldNumber;
 const int RequestMessage::kHeartBeatFieldNumber;
 const int RequestMessage::kAppIdFieldNumber;
 #endif  // !_MSC_VER
@@ -13464,6 +13845,7 @@ void RequestMessage::InitAsDefaultInstance() {
   orders_ = const_cast< ::FrontEngine::QueryOrdersRequest*>(&::FrontEngine::QueryOrdersRequest::default_instance());
   send_info_ = const_cast< ::FrontEngine::SendCoinRequest*>(&::FrontEngine::SendCoinRequest::default_instance());
   recieve_info_ = const_cast< ::FrontEngine::RecieveCoinRequest*>(&::FrontEngine::RecieveCoinRequest::default_instance());
+  canceled_ = const_cast< ::FrontEngine::CanceledRequest*>(&::FrontEngine::CanceledRequest::default_instance());
   heart_beat_ = const_cast< ::FrontEngine::HeartBeatRequest*>(&::FrontEngine::HeartBeatRequest::default_instance());
   app_id_ = const_cast< ::FrontEngine::CheckAppId*>(&::FrontEngine::CheckAppId::default_instance());
 }
@@ -13492,6 +13874,7 @@ void RequestMessage::SharedCtor() {
   orders_ = NULL;
   send_info_ = NULL;
   recieve_info_ = NULL;
+  canceled_ = NULL;
   heart_beat_ = NULL;
   app_id_ = NULL;
 }
@@ -13514,6 +13897,7 @@ void RequestMessage::SharedDtor() {
     delete orders_;
     delete send_info_;
     delete recieve_info_;
+    delete canceled_;
     delete heart_beat_;
     delete app_id_;
   }
@@ -13564,6 +13948,8 @@ void RequestMessage::Clear() {
   send_info_ = NULL;
   if (GetArenaNoVirtual() == NULL && recieve_info_ != NULL) delete recieve_info_;
   recieve_info_ = NULL;
+  if (GetArenaNoVirtual() == NULL && canceled_ != NULL) delete canceled_;
+  canceled_ = NULL;
   if (GetArenaNoVirtual() == NULL && heart_beat_ != NULL) delete heart_beat_;
   heart_beat_ = NULL;
   if (GetArenaNoVirtual() == NULL && app_id_ != NULL) delete app_id_;
@@ -13750,26 +14136,39 @@ bool RequestMessage::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(106)) goto parse_heart_beat;
+        if (input->ExpectTag(106)) goto parse_canceled;
         break;
       }
 
-      // optional .FrontEngine.HeartBeatRequest heart_beat = 13;
+      // optional .FrontEngine.CanceledRequest canceled = 13;
       case 13: {
         if (tag == 106) {
+         parse_canceled:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_canceled()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(114)) goto parse_heart_beat;
+        break;
+      }
+
+      // optional .FrontEngine.HeartBeatRequest heart_beat = 14;
+      case 14: {
+        if (tag == 114) {
          parse_heart_beat:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_heart_beat()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(114)) goto parse_app_id;
+        if (input->ExpectTag(122)) goto parse_app_id;
         break;
       }
 
-      // optional .FrontEngine.CheckAppId app_id = 14;
-      case 14: {
-        if (tag == 114) {
+      // optional .FrontEngine.CheckAppId app_id = 15;
+      case 15: {
+        if (tag == 122) {
          parse_app_id:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_app_id()));
@@ -13892,16 +14291,22 @@ void RequestMessage::SerializeWithCachedSizes(
       12, *this->recieve_info_, output);
   }
 
-  // optional .FrontEngine.HeartBeatRequest heart_beat = 13;
-  if (this->has_heart_beat()) {
+  // optional .FrontEngine.CanceledRequest canceled = 13;
+  if (this->has_canceled()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      13, *this->heart_beat_, output);
+      13, *this->canceled_, output);
   }
 
-  // optional .FrontEngine.CheckAppId app_id = 14;
+  // optional .FrontEngine.HeartBeatRequest heart_beat = 14;
+  if (this->has_heart_beat()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      14, *this->heart_beat_, output);
+  }
+
+  // optional .FrontEngine.CheckAppId app_id = 15;
   if (this->has_app_id()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      14, *this->app_id_, output);
+      15, *this->app_id_, output);
   }
 
   // @@protoc_insertion_point(serialize_end:FrontEngine.RequestMessage)
@@ -14009,18 +14414,25 @@ void RequestMessage::SerializeWithCachedSizes(
         12, *this->recieve_info_, target);
   }
 
-  // optional .FrontEngine.HeartBeatRequest heart_beat = 13;
+  // optional .FrontEngine.CanceledRequest canceled = 13;
+  if (this->has_canceled()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        13, *this->canceled_, target);
+  }
+
+  // optional .FrontEngine.HeartBeatRequest heart_beat = 14;
   if (this->has_heart_beat()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        13, *this->heart_beat_, target);
+        14, *this->heart_beat_, target);
   }
 
-  // optional .FrontEngine.CheckAppId app_id = 14;
+  // optional .FrontEngine.CheckAppId app_id = 15;
   if (this->has_app_id()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        14, *this->app_id_, target);
+        15, *this->app_id_, target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:FrontEngine.RequestMessage)
@@ -14113,14 +14525,21 @@ int RequestMessage::ByteSize() const {
         *this->recieve_info_);
   }
 
-  // optional .FrontEngine.HeartBeatRequest heart_beat = 13;
+  // optional .FrontEngine.CanceledRequest canceled = 13;
+  if (this->has_canceled()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->canceled_);
+  }
+
+  // optional .FrontEngine.HeartBeatRequest heart_beat = 14;
   if (this->has_heart_beat()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         *this->heart_beat_);
   }
 
-  // optional .FrontEngine.CheckAppId app_id = 14;
+  // optional .FrontEngine.CheckAppId app_id = 15;
   if (this->has_app_id()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -14187,6 +14606,9 @@ void RequestMessage::MergeFrom(const RequestMessage& from) {
   if (from.has_recieve_info()) {
     mutable_recieve_info()->::FrontEngine::RecieveCoinRequest::MergeFrom(from.recieve_info());
   }
+  if (from.has_canceled()) {
+    mutable_canceled()->::FrontEngine::CanceledRequest::MergeFrom(from.canceled());
+  }
   if (from.has_heart_beat()) {
     mutable_heart_beat()->::FrontEngine::HeartBeatRequest::MergeFrom(from.heart_beat());
   }
@@ -14229,6 +14651,7 @@ void RequestMessage::InternalSwap(RequestMessage* other) {
   std::swap(orders_, other->orders_);
   std::swap(send_info_, other->send_info_);
   std::swap(recieve_info_, other->recieve_info_);
+  std::swap(canceled_, other->canceled_);
   std::swap(heart_beat_, other->heart_beat_);
   std::swap(app_id_, other->app_id_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
@@ -14691,7 +15114,44 @@ void RequestMessage::set_allocated_recieve_info(::FrontEngine::RecieveCoinReques
   // @@protoc_insertion_point(field_set_allocated:FrontEngine.RequestMessage.recieve_info)
 }
 
-// optional .FrontEngine.HeartBeatRequest heart_beat = 13;
+// optional .FrontEngine.CanceledRequest canceled = 13;
+bool RequestMessage::has_canceled() const {
+  return !_is_default_instance_ && canceled_ != NULL;
+}
+void RequestMessage::clear_canceled() {
+  if (GetArenaNoVirtual() == NULL && canceled_ != NULL) delete canceled_;
+  canceled_ = NULL;
+}
+const ::FrontEngine::CanceledRequest& RequestMessage::canceled() const {
+  // @@protoc_insertion_point(field_get:FrontEngine.RequestMessage.canceled)
+  return canceled_ != NULL ? *canceled_ : *default_instance_->canceled_;
+}
+::FrontEngine::CanceledRequest* RequestMessage::mutable_canceled() {
+  
+  if (canceled_ == NULL) {
+    canceled_ = new ::FrontEngine::CanceledRequest;
+  }
+  // @@protoc_insertion_point(field_mutable:FrontEngine.RequestMessage.canceled)
+  return canceled_;
+}
+::FrontEngine::CanceledRequest* RequestMessage::release_canceled() {
+  
+  ::FrontEngine::CanceledRequest* temp = canceled_;
+  canceled_ = NULL;
+  return temp;
+}
+void RequestMessage::set_allocated_canceled(::FrontEngine::CanceledRequest* canceled) {
+  delete canceled_;
+  canceled_ = canceled;
+  if (canceled) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:FrontEngine.RequestMessage.canceled)
+}
+
+// optional .FrontEngine.HeartBeatRequest heart_beat = 14;
 bool RequestMessage::has_heart_beat() const {
   return !_is_default_instance_ && heart_beat_ != NULL;
 }
@@ -14728,7 +15188,7 @@ void RequestMessage::set_allocated_heart_beat(::FrontEngine::HeartBeatRequest* h
   // @@protoc_insertion_point(field_set_allocated:FrontEngine.RequestMessage.heart_beat)
 }
 
-// optional .FrontEngine.CheckAppId app_id = 14;
+// optional .FrontEngine.CheckAppId app_id = 15;
 bool RequestMessage::has_app_id() const {
   return !_is_default_instance_ && app_id_ != NULL;
 }

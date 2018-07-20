@@ -12,6 +12,7 @@
 #include "log.h"
 #include <thread>
 #include <unistd.h>
+#include <sstream>
 
 #define FORTESTS
 
@@ -54,7 +55,6 @@ void RequestManager::Run()
     {
         int socket = -1;
         char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
-        //INFO_LOG("Recv buff size  = " <<DataManager::GetInstance()->RecvQueueSize());
         DataManager::GetInstance()->RecvQueueBack(socket, sender_msg);
         if(!sender_msg)
         {
@@ -78,13 +78,8 @@ void RequestManager::OnRequest(const int &socket, const char *message)
     FrontEngine::RequestMessage req_message;
     req_message.ParseFromArray(message, MESSAGE_BODY_SIZE);
     
-    INFO_LOG("message type = " << req_message.type());
-    INFO_LOG("message client_id = " << req_message.client_id());
+    INFO_LOG("message type = " << req_message.type() << " client_id = " << req_message.client_id());
 
-    if(req_message.client_id().empty() && req_message.type() != FrontEngine::enums_RequestType::enums_RequestType_CheckAppId)
-    {
-        //INFO_LOG(" sdk id is empty");
-    }
     if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_CheckAppId)
     {
         CheckAppId(socket, req_message);
@@ -130,11 +125,16 @@ void RequestManager::HeartBeatHandler()
         m_heat_mtux.lock();
         std::map<std::string,int>::iterator iter =m_heat_count.begin();
         while(iter != m_heat_count.end())
-        {
+        {   
+            std::string sdk_id = iter->first;
             if(iter->second == 5)
             {
-                //TODO:delete sdkid
-                INFO_LOG("delete sdkid ");
+                DataManager::GetInstance()->ClientInfoMapErase(sdk_id);
+                if(RemoveSdkId(sdk_id))
+                {
+                    INFO_LOG("delete sdkid " << sdk_id);
+                    break;
+                }
             }
             else if(iter->second < 5)
             {
@@ -150,7 +150,7 @@ void RequestManager::HeartBeatHandler()
 
 void RequestManager::SendManage(const char *message)
 {
-    #if 0
+#ifndef FORTESTS
     zmq::context_t context(1);
     zmq::socket_t sender(context, ZMQ_PUSH);
     sender.bind(walletfront::Common::GetInstance()->GetPushService().c_str()); // TBD
@@ -161,7 +161,7 @@ void RequestManager::SendManage(const char *message)
 
     sender.send(*query);
     INFO_LOG("wallet front send ok");
-    #endif
+#endif
 }
 
 void RequestManager::CheckAppId(const int &socket, FrontEngine::RequestMessage &req_message)
@@ -190,11 +190,11 @@ void RequestManager::CheckAppId(const int &socket, FrontEngine::RequestMessage &
     {
         if(pCheckAppIdCb)
         {
-            pCheckAppIdCb->set_sdk_id("sdk_id");
+            pCheckAppIdCb->set_sdk_id(MakeSdkId(pCheckAppId->app_id(), socket));
             pCheckAppIdCb->set_request_id(req_message.request_id());
             pCheckAppIdCb->set_app_id(pCheckAppId->app_id());
         }
-        DataManager::GetInstance()->ClientInfoMapUpdate(socket, req_message.client_id());// TODO where from sdk id
+        DataManager::GetInstance()->ClientInfoMapUpdate(socket, pCheckAppIdCb->sdk_id());// TODO where from sdk id
     }
     else  // appId not found
     {
@@ -214,7 +214,7 @@ void RequestManager::CheckAppId(const int &socket, FrontEngine::RequestMessage &
 
     if(ret)
     {
-        DataManager::GetInstance()->CallBackQueuePush(req_message.client_id(), sender_msg);
+        DataManager::GetInstance()->CallBackQueuePush(pCheckAppIdCb->sdk_id(), sender_msg);
     }
     else
     {
@@ -266,6 +266,32 @@ void RequestManager::RequestHeartBeat(FrontEngine::RequestMessage &req_message)
     req_message.release_heart_beat();
     pHeatBeat = NULL;
     pHeartBeatCb = NULL;
+}
+
+bool RequestManager::RemoveSdkId(const std::string &sdk_id)
+{
+    bool bRet = false;
+    std::map<std::string, int>::iterator iter;
+    iter = m_heat_count.find(sdk_id);
+
+    if(iter != m_heat_count.end())
+    {
+        m_heat_count.erase(iter);
+        bRet = true;
+    }
+    return bRet;
+}
+
+std::string RequestManager::MakeSdkId(const std::string &sdk_id, const int &socket)
+{
+    std::string sdk = sdk_id;
+    sdk += "-";
+
+    std::ostringstream oss;
+    oss << socket;
+    sdk += oss.str();
+
+    return sdk;
 }
 
 void RequestManager::RequestCreatAccount(FrontEngine::RequestMessage &req_message)

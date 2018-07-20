@@ -22,7 +22,8 @@ class DataManager
         // CallBackQueue IF
         bool CallBackQueuePush(const std::string &sdk_id, const char buff[]);
         bool CallBackQueueBack(const std::string &sdk_id, char buff[]);
-        int CallBackQueueSize(const std::string &sdk_id) { return m_callback_queue[sdk_id].size_approx(); }
+        int  CallBackQueueSize(const std::string &sdk_id) { return m_callback_queue[sdk_id].size_approx(); }
+        bool CallBackQueueEmpty(const int &socket);
         // callBack for check App id
         bool CBQueuePush(const int &socket, const char buff[]);
         bool CBQueueBack(const int &socket, char buff[]);

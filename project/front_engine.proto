@@ -246,6 +246,13 @@ message CanceledCallBack
     string error                    = 4;
 };
 
+//拒单请求
+message CanceledRequest
+{
+    string request_id               = 1;
+    Order order                     = 2;
+}
+
 //拒单回调
 message RejectedCallBack
 {
@@ -257,7 +264,7 @@ message RejectedCallBack
 
 message RequestMessage
 {
-    tring request_id                = 1;
+    string request_id                = 1;
     string client_id                = 2;
     string front_id                 = 3;
     string md5                      = 4;
@@ -269,8 +276,9 @@ message RequestMessage
     QueryOrdersRequest orders       = 10;
     SendCoinRequest send_info       = 11;
     RecieveCoinRequest recieve_info = 12;
-    HeartBeatRequest heart_beat     = 13;
-    CheckAppId app_id               = 14; 
+    CanceledRequest canceled        = 13;
+    HeartBeatRequest heart_beat     = 14;
+    CheckAppId app_id               = 15; 
 };
 
 message CallBackMessage

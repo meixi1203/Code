@@ -21,7 +21,7 @@ DataManager* DataManager::GetInstance()
 
 DataManager::DataManager()
 {
-    m_sdk_id = "sdk_id";
+    m_sdk_id = "";
 }
 
 DataManager::~DataManager()

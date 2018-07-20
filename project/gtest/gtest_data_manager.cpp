@@ -28,9 +28,9 @@ class TestDataManager:public testing::Test
 
 TEST(TestDataManager, Pointer_TestDataManager)
 {
-    TestDataManager *ptest = new TestDataManager();
-    ASSERT_EQ(true, ptest != NULL);
-    ASSERT_EQ(true, ptest->pDataManager != NULL);
+    TestDataManager *pTest = new TestDataManager();
+    ASSERT_EQ(true, pTest != NULL);
+    ASSERT_EQ(true, pTest->pDataManager != NULL);
     TestDataManager test;
     ASSERT_EQ(true, test.pDataManager != NULL);
 }
