@@ -19,15 +19,15 @@
 #error regenerate this file with a newer version of protoc.
 #endif
 
-#include "google/protobuf/arena.h"
-#include "google/protobuf/arenastring.h"
-#include "google/protobuf/generated_message_util.h"
-#include "google/protobuf/metadata.h"
-#include "google/protobuf/message.h"
-#include "google/protobuf/repeated_field.h"
-#include "google/protobuf/extension_set.h"
-#include "google/protobuf/generated_enum_reflection.h"
-#include "google/protobuf/unknown_field_set.h"
+#include <google/protobuf/arena.h>
+#include <google/protobuf/arenastring.h>
+#include <google/protobuf/generated_message_util.h>
+#include <google/protobuf/metadata.h>
+#include <google/protobuf/message.h>
+#include <google/protobuf/repeated_field.h>
+#include <google/protobuf/extension_set.h>
+#include <google/protobuf/generated_enum_reflection.h>
+#include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
 namespace FrontEngine {
@@ -39,6 +39,7 @@ void protobuf_ShutdownFile_front_5fengine_2eproto();
 
 class CallBackMessage;
 class CanceledCallBack;
+class CanceledRequest;
 class CheckAppId;
 class CheckAppIdCallBack;
 class CoinCapital;
@@ -2908,6 +2909,99 @@ class CanceledCallBack : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class CanceledRequest : public ::google::protobuf::Message {
+ public:
+  CanceledRequest();
+  virtual ~CanceledRequest();
+
+  CanceledRequest(const CanceledRequest& from);
+
+  inline CanceledRequest& operator=(const CanceledRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CanceledRequest& default_instance();
+
+  void Swap(CanceledRequest* other);
+
+  // implements Message ----------------------------------------------
+
+  inline CanceledRequest* New() const { return New(NULL); }
+
+  CanceledRequest* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CanceledRequest& from);
+  void MergeFrom(const CanceledRequest& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(CanceledRequest* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string request_id = 1;
+  void clear_request_id();
+  static const int kRequestIdFieldNumber = 1;
+  const ::std::string& request_id() const;
+  void set_request_id(const ::std::string& value);
+  void set_request_id(const char* value);
+  void set_request_id(const char* value, size_t size);
+  ::std::string* mutable_request_id();
+  ::std::string* release_request_id();
+  void set_allocated_request_id(::std::string* request_id);
+
+  // optional .FrontEngine.Order order = 2;
+  bool has_order() const;
+  void clear_order();
+  static const int kOrderFieldNumber = 2;
+  const ::FrontEngine::Order& order() const;
+  ::FrontEngine::Order* mutable_order();
+  ::FrontEngine::Order* release_order();
+  void set_allocated_order(::FrontEngine::Order* order);
+
+  // @@protoc_insertion_point(class_scope:FrontEngine.CanceledRequest)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::internal::ArenaStringPtr request_id_;
+  ::FrontEngine::Order* order_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_front_5fengine_2eproto();
+  friend void protobuf_AssignDesc_front_5fengine_2eproto();
+  friend void protobuf_ShutdownFile_front_5fengine_2eproto();
+
+  void InitAsDefaultInstance();
+  static CanceledRequest* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class RejectedCallBack : public ::google::protobuf::Message {
  public:
   RejectedCallBack();
@@ -3189,19 +3283,28 @@ class RequestMessage : public ::google::protobuf::Message {
   ::FrontEngine::RecieveCoinRequest* release_recieve_info();
   void set_allocated_recieve_info(::FrontEngine::RecieveCoinRequest* recieve_info);
 
-  // optional .FrontEngine.HeartBeatRequest heart_beat = 13;
+  // optional .FrontEngine.CanceledRequest canceled = 13;
+  bool has_canceled() const;
+  void clear_canceled();
+  static const int kCanceledFieldNumber = 13;
+  const ::FrontEngine::CanceledRequest& canceled() const;
+  ::FrontEngine::CanceledRequest* mutable_canceled();
+  ::FrontEngine::CanceledRequest* release_canceled();
+  void set_allocated_canceled(::FrontEngine::CanceledRequest* canceled);
+
+  // optional .FrontEngine.HeartBeatRequest heart_beat = 14;
   bool has_heart_beat() const;
   void clear_heart_beat();
-  static const int kHeartBeatFieldNumber = 13;
+  static const int kHeartBeatFieldNumber = 14;
   const ::FrontEngine::HeartBeatRequest& heart_beat() const;
   ::FrontEngine::HeartBeatRequest* mutable_heart_beat();
   ::FrontEngine::HeartBeatRequest* release_heart_beat();
   void set_allocated_heart_beat(::FrontEngine::HeartBeatRequest* heart_beat);
 
-  // optional .FrontEngine.CheckAppId app_id = 14;
+  // optional .FrontEngine.CheckAppId app_id = 15;
   bool has_app_id() const;
   void clear_app_id();
-  static const int kAppIdFieldNumber = 14;
+  static const int kAppIdFieldNumber = 15;
   const ::FrontEngine::CheckAppId& app_id() const;
   ::FrontEngine::CheckAppId* mutable_app_id();
   ::FrontEngine::CheckAppId* release_app_id();
@@ -3223,6 +3326,7 @@ class RequestMessage : public ::google::protobuf::Message {
   ::FrontEngine::QueryOrdersRequest* orders_;
   ::FrontEngine::SendCoinRequest* send_info_;
   ::FrontEngine::RecieveCoinRequest* recieve_info_;
+  ::FrontEngine::CanceledRequest* canceled_;
   ::FrontEngine::HeartBeatRequest* heart_beat_;
   ::FrontEngine::CheckAppId* app_id_;
   int type_;
@@ -6800,6 +6904,90 @@ inline void CanceledCallBack::set_allocated_error(::std::string* error) {
 
 // -------------------------------------------------------------------
 
+// CanceledRequest
+
+// optional string request_id = 1;
+inline void CanceledRequest::clear_request_id() {
+  request_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& CanceledRequest::request_id() const {
+  // @@protoc_insertion_point(field_get:FrontEngine.CanceledRequest.request_id)
+  return request_id_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CanceledRequest::set_request_id(const ::std::string& value) {
+  
+  request_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:FrontEngine.CanceledRequest.request_id)
+}
+inline void CanceledRequest::set_request_id(const char* value) {
+  
+  request_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:FrontEngine.CanceledRequest.request_id)
+}
+inline void CanceledRequest::set_request_id(const char* value, size_t size) {
+  
+  request_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:FrontEngine.CanceledRequest.request_id)
+}
+inline ::std::string* CanceledRequest::mutable_request_id() {
+  
+  // @@protoc_insertion_point(field_mutable:FrontEngine.CanceledRequest.request_id)
+  return request_id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CanceledRequest::release_request_id() {
+  
+  return request_id_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CanceledRequest::set_allocated_request_id(::std::string* request_id) {
+  if (request_id != NULL) {
+    
+  } else {
+    
+  }
+  request_id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), request_id);
+  // @@protoc_insertion_point(field_set_allocated:FrontEngine.CanceledRequest.request_id)
+}
+
+// optional .FrontEngine.Order order = 2;
+inline bool CanceledRequest::has_order() const {
+  return !_is_default_instance_ && order_ != NULL;
+}
+inline void CanceledRequest::clear_order() {
+  if (GetArenaNoVirtual() == NULL && order_ != NULL) delete order_;
+  order_ = NULL;
+}
+inline const ::FrontEngine::Order& CanceledRequest::order() const {
+  // @@protoc_insertion_point(field_get:FrontEngine.CanceledRequest.order)
+  return order_ != NULL ? *order_ : *default_instance_->order_;
+}
+inline ::FrontEngine::Order* CanceledRequest::mutable_order() {
+  
+  if (order_ == NULL) {
+    order_ = new ::FrontEngine::Order;
+  }
+  // @@protoc_insertion_point(field_mutable:FrontEngine.CanceledRequest.order)
+  return order_;
+}
+inline ::FrontEngine::Order* CanceledRequest::release_order() {
+  
+  ::FrontEngine::Order* temp = order_;
+  order_ = NULL;
+  return temp;
+}
+inline void CanceledRequest::set_allocated_order(::FrontEngine::Order* order) {
+  delete order_;
+  order_ = order;
+  if (order) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:FrontEngine.CanceledRequest.order)
+}
+
+// -------------------------------------------------------------------
+
 // RejectedCallBack
 
 // optional string request_id = 1;
@@ -7388,7 +7576,44 @@ inline void RequestMessage::set_allocated_recieve_info(::FrontEngine::RecieveCoi
   // @@protoc_insertion_point(field_set_allocated:FrontEngine.RequestMessage.recieve_info)
 }
 
-// optional .FrontEngine.HeartBeatRequest heart_beat = 13;
+// optional .FrontEngine.CanceledRequest canceled = 13;
+inline bool RequestMessage::has_canceled() const {
+  return !_is_default_instance_ && canceled_ != NULL;
+}
+inline void RequestMessage::clear_canceled() {
+  if (GetArenaNoVirtual() == NULL && canceled_ != NULL) delete canceled_;
+  canceled_ = NULL;
+}
+inline const ::FrontEngine::CanceledRequest& RequestMessage::canceled() const {
+  // @@protoc_insertion_point(field_get:FrontEngine.RequestMessage.canceled)
+  return canceled_ != NULL ? *canceled_ : *default_instance_->canceled_;
+}
+inline ::FrontEngine::CanceledRequest* RequestMessage::mutable_canceled() {
+  
+  if (canceled_ == NULL) {
+    canceled_ = new ::FrontEngine::CanceledRequest;
+  }
+  // @@protoc_insertion_point(field_mutable:FrontEngine.RequestMessage.canceled)
+  return canceled_;
+}
+inline ::FrontEngine::CanceledRequest* RequestMessage::release_canceled() {
+  
+  ::FrontEngine::CanceledRequest* temp = canceled_;
+  canceled_ = NULL;
+  return temp;
+}
+inline void RequestMessage::set_allocated_canceled(::FrontEngine::CanceledRequest* canceled) {
+  delete canceled_;
+  canceled_ = canceled;
+  if (canceled) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:FrontEngine.RequestMessage.canceled)
+}
+
+// optional .FrontEngine.HeartBeatRequest heart_beat = 14;
 inline bool RequestMessage::has_heart_beat() const {
   return !_is_default_instance_ && heart_beat_ != NULL;
 }
@@ -7425,7 +7650,7 @@ inline void RequestMessage::set_allocated_heart_beat(::FrontEngine::HeartBeatReq
   // @@protoc_insertion_point(field_set_allocated:FrontEngine.RequestMessage.heart_beat)
 }
 
-// optional .FrontEngine.CheckAppId app_id = 14;
+// optional .FrontEngine.CheckAppId app_id = 15;
 inline bool RequestMessage::has_app_id() const {
   return !_is_default_instance_ && app_id_ != NULL;
 }
@@ -8023,6 +8248,8 @@ inline void CallBackMessage::set_allocated_app_id(::FrontEngine::CheckAppIdCallB
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

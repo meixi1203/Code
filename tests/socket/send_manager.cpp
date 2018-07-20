@@ -113,7 +113,7 @@ void SendManager::CheckAppid_Ok()
 
     FrontEngine::RequestMessage req_message;
     req_message.set_request_id("request_id");
-    req_message.set_client_id(ChangeIntToStr());
+    req_message.set_client_id("");
     req_message.set_front_id("front_id");
     req_message.set_md5(STRING_EMPTY);
     req_message.set_type(FrontEngine::enums_RequestType::enums_RequestType_CheckAppId);
