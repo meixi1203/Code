@@ -16,7 +16,7 @@ namespace walletfront {
 
 SocketClient::SocketClient()
 {
-        this->m_ip   = "192.168.111.128";
+        this->m_ip   = "192.168.1.82";
         this->m_port = 5555;
 }
 
@@ -55,7 +55,7 @@ void SocketClient::RecvRun()
         int size = read(buffer);
         if(size ==MESSAGE_BODY_SIZE && buffer != NULL )
         {
-           DataManager::GetInstance()->CallBackQueuePush(buffer);
+            DataManager::GetInstance()->CallBackQueuePush(buffer);
         }
         else
         {

@@ -77,7 +77,7 @@ void RequestManager::OnRequest(const int &socket, const char *message)
 
     FrontEngine::RequestMessage req_message;
     req_message.ParseFromArray(message, MESSAGE_BODY_SIZE);
-    
+
     INFO_LOG("message type = " << req_message.type() << " client_id = " << req_message.client_id());
 
     if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_CheckAppId)
