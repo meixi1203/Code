@@ -58,7 +58,7 @@ void RequestManager::Run()
         DataManager::GetInstance()->RecvQueueBack(socket, sender_msg);
         if(!sender_msg)
         {
-            break;
+            continue;
         }
         else if(CheckMd5(sender_msg))
         {
@@ -159,7 +159,6 @@ void RequestManager::SendManage(const char *message)
     memcpy(query->data(), message, message_size);
 
     sender.send(*query);
-    INFO_LOG("wallet front send ok");
 #endif
 }
 
