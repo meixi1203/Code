@@ -36,11 +36,10 @@ int main(int argc, char **argv)
     send_mamager.SendManagerInit();
     client.SocketClientInit();
     cb_manager.CallBackManagerInit();
-    send_mamager.run();
 
     while(1)
     {
-        sleep(1);
+        send_mamager.run();
     }
 
     return 0;

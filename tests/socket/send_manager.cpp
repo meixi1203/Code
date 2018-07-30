@@ -34,18 +34,6 @@ void SendManager::SendManagerInit()
     m_reqfun_vec.push_back(std::bind(&SendManager::ReqQueryOrders, this));
     m_reqfun_vec.push_back(std::bind(&SendManager::ReqSendCoin, this));
     m_reqfun_vec.push_back(std::bind(&SendManager::ReqRecieveCoin, this));
-
-    std::thread heart_thread(&SendManager::HeartBeatHandler, this);
-    heart_thread.detach();
-}
-
-void SendManager::HeartBeatHandler()
-{
-    while(1)
-    {
-        ReqHeartBeat();
-        sleep(3);
-    }
 }
 
 void SendManager::run()
@@ -55,10 +43,16 @@ void SendManager::run()
 
     while(1)
     {
-        for(int v = 0; v < m_reqfun_vec.size(); v++)
+        for(int v = 0, count = 0; v < m_reqfun_vec.size(); v++, count++)
         {
             m_reqfun_vec[v]();
             sleep(1);
+
+            if(count == 3)
+            {
+                ReqHeartBeat();
+                count = 0;
+            }
         }
     }
 }

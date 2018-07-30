@@ -29,7 +29,6 @@ class SendManager
         void ReqQueryOrders();
         void ReqSendCoin();
         void ReqRecieveCoin();
-        void HeartBeatHandler();
         std::string ChangeIntToStr();
 
     private:
