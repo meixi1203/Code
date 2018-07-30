@@ -34,7 +34,6 @@ void CallBackManager::run()
 {
     while(1)
     {
-        
         if(DataManager::GetInstance()->CallBackQueueSize() > 0)
         {
             char buffer[MESSAGE_BODY_SIZE] = "";
@@ -46,7 +45,7 @@ void CallBackManager::run()
         }
         else
         {
-            sleep(0.5);
+            sleep(1);
         }
     }
 }
@@ -121,7 +120,7 @@ bool CallBackManager::CheckMD5(char * msg)
 
     std::string recv_md5 = cb_message.md5();
     cb_message.set_md5(STRING_EMPTY);
-    
+
     cb_message.SerializeToArray(buffer, MESSAGE_BODY_SIZE );
     MD5 md5(buffer, MESSAGE_BODY_SIZE);
     std::string current_md5 = md5.toString();
@@ -132,7 +131,7 @@ bool CallBackManager::CheckMD5(char * msg)
     }
     std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__  << " line: " << __LINE__ << " CheckMD5  ret  = " << ret << std::endl;
     return ret;
-    
+
 }
 
 void CallBackManager::HeatBeatCallBack(FrontEngine::CallBackMessage &cb_message)
@@ -151,7 +150,7 @@ void CallBackManager::CheckAppIdCallBack(FrontEngine::CallBackMessage &cb_messag
     {
         DataManager::GetInstance()->SetSdkId(pCheckAppId->sdk_id());
     }
-    
+
     cb_message.release_app_id();
     pCheckAppId = NULL;
 }
@@ -195,10 +194,10 @@ void CallBackManager::QueryBalanceCallBack(FrontEngine::CallBackMessage &cb_mess
         std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " QueryBalanceCallBack error = " << pQueryBalance->error() << std::endl;
         if(pCoinCapital)
         {
-           std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " QueryBalanceCallBack address = " << pCoinCapital->address() << std::endl;
-           std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " QueryBalanceCallBack type = " << pCoinCapital->type() << std::endl;
-           std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " QueryBalanceCallBack amount = " << pCoinCapital->amount() << std::endl;
-           std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " QueryBalanceCallBack frozen_amount = " << pCoinCapital->frozen_amount() << std::endl;
+            std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " QueryBalanceCallBack address = " << pCoinCapital->address() << std::endl;
+            std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " QueryBalanceCallBack type = " << pCoinCapital->type() << std::endl;
+            std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " QueryBalanceCallBack amount = " << pCoinCapital->amount() << std::endl;
+            std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " QueryBalanceCallBack frozen_amount = " << pCoinCapital->frozen_amount() << std::endl;
         }
     }
 
@@ -380,7 +379,7 @@ void CallBackManager::RejectedCallBack(FrontEngine::CallBackMessage &cb_message)
             std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " RejectedCallBack order_date = " << pOrder->order_date() << std::endl;
             std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " RejectedCallBack order_time = " << pOrder->order_time() << std::endl;
             std::cout << "file path: " << __FILE__ << " function name：" << __FUNCTION__ << " line: " << __LINE__ << " RejectedCallBack status = " << pOrder->status() << std::endl;
-        }  
+        }
     }
 
     pRejected->release_order();

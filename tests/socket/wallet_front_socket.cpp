@@ -42,7 +42,7 @@ void SocketClient::SendRun()
         }
         else
         {
-            sleep(0.5);
+            sleep(1);
         }
     }
 }
@@ -59,7 +59,7 @@ void SocketClient::RecvRun()
         }
         else
         {
-            sleep(0.5);
+            sleep(1);
         }
     }
 }

@@ -139,10 +139,10 @@ void CallBackManager::QueryBalanceCallBack(FrontEngine::CallBackMessage &cb_mess
         INFO_LOG("QueryBalanceCallBack error = " << pQueryBalance->error());
         if(pCoinCapital)
         {
-           INFO_LOG("QueryBalanceCallBack address = " << pCoinCapital->address());
-           INFO_LOG("QueryBalanceCallBack type = " << pCoinCapital->type());
-           INFO_LOG("QueryBalanceCallBack amount = " << pCoinCapital->amount());
-           INFO_LOG("QueryBalanceCallBack frozen_amount = " << pCoinCapital->frozen_amount());
+            INFO_LOG("QueryBalanceCallBack address = " << pCoinCapital->address());
+            INFO_LOG("QueryBalanceCallBack type = " << pCoinCapital->type());
+            INFO_LOG("QueryBalanceCallBack amount = " << pCoinCapital->amount());
+            INFO_LOG("QueryBalanceCallBack frozen_amount = " << pCoinCapital->frozen_amount());
         }
     }
 
@@ -163,8 +163,8 @@ void CallBackManager::QueryFeeCallBack(FrontEngine::CallBackMessage &cb_message)
         INFO_LOG("QueryFeeCallBack request_id = " << pQueryFee->request_id());
         INFO_LOG("QueryFeeCallBack coin_type = " << pQueryFee->coin_type());
         INFO_LOG("QueryFeeCallBack fee = " << pQueryFee->fee());
-        INFO_LOG("QueryFeeCallBack errorCode = " << pQueryFee->errorcode()); 
-        INFO_LOG("QueryFeeCallBack error = " << pQueryFee->error()); 
+        INFO_LOG("QueryFeeCallBack errorCode = " << pQueryFee->errorcode());
+        INFO_LOG("QueryFeeCallBack error = " << pQueryFee->error());
     }
 
     SerializeToArray(cb_message);
@@ -328,7 +328,7 @@ void CallBackManager::RejectedCallBack(FrontEngine::CallBackMessage &cb_message)
             INFO_LOG("RejectedCallBack order_date = " << pOrder->order_date());
             INFO_LOG("RejectedCallBack order_time = " << pOrder->order_time());
             INFO_LOG("RejectedCallBack status = " << pOrder->status());
-        }  
+        }
     }
 
     SerializeToArray(cb_message);

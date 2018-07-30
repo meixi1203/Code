@@ -5,7 +5,7 @@ package FrontEngine;
 message enums {
 
 enum OrderStatus
-{     
+{
     NONE_ORDER_STATUS               = 0;
     TO_BE_REPORTED                  = 1;
     REPORTED                        = 2;
@@ -55,16 +55,16 @@ enum CallBackType
 };
 
 message Order {
-  string order_id                   = 1;
-  enums.CoinType type               = 2;
-  string from_address               = 3;
-  string to_address                 = 4;
-  string description                = 5;
-  string amount                     = 6;
-  string fee                        = 7;
-  int32 order_date                  = 8;
-  int32 order_time                  = 9;
-  enums.OrderStatus status          = 10;
+    string order_id                   = 1;
+    enums.CoinType type               = 2;
+    string from_address               = 3;
+    string to_address                 = 4;
+    string description                = 5;
+    string amount                     = 6;
+    string fee                        = 7;
+    int32 order_date                  = 8;
+    int32 order_time                  = 9;
+    enums.OrderStatus status          = 10;
 };
 
 message CoinInfo
@@ -278,7 +278,7 @@ message RequestMessage
     RecieveCoinRequest recieve_info = 12;
     CanceledRequest canceled        = 13;
     HeartBeatRequest heart_beat     = 14;
-    CheckAppId app_id               = 15; 
+    CheckAppId app_id               = 15;
 };
 
 message CallBackMessage

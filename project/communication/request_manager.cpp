@@ -86,35 +86,35 @@ void RequestManager::OnRequest(const int &socket, const char *message)
     }
     else if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_HeartBeatRequest)
     {
-        RequestHeartBeat(req_message);
+        RequestHeartBeat(socket, req_message);
     }
     else if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_CreateAccountRequest)
     {
-        RequestCreatAccount(req_message);
+        RequestCreatAccount(socket, req_message);
     }
     else if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_QueryBalanceRequest)
     {
-        RequestQueryBalance(req_message);
+        RequestQueryBalance(socket, req_message);
     }
     else if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_QueryFeeRequest)
     {
-        QueryFeeRequest(req_message);
+        QueryFeeRequest(socket, req_message);
     }
     else if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_QueryOrderRequest)
     {
-        RequestQueryOrder(req_message);
+        RequestQueryOrder(socket, req_message);
     }
     else if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_QueryOrdersRequest)
     {
-        RequestQueryOrders(req_message);
+        RequestQueryOrders(socket, req_message);
     }
     else if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_SendCoinRequest)
     {
-        RequestSendCoin(req_message);
+        RequestSendCoin(socket, req_message);
     }
     else if(req_message.type() == FrontEngine::enums_RequestType::enums_RequestType_RecieveCoinRequest)
     {
-        RequestRecieveCoin(req_message);
+        RequestRecieveCoin(socket, req_message);
     }
 }
 
@@ -125,7 +125,7 @@ void RequestManager::HeartBeatHandler()
         m_heat_mtux.lock();
         std::map<std::string,int>::iterator iter =m_heat_count.begin();
         while(iter != m_heat_count.end())
-        {   
+        {
             std::string sdk_id = iter->first;
             if(iter->second == 5)
             {
@@ -140,7 +140,6 @@ void RequestManager::HeartBeatHandler()
             {
                 iter->second++;
             }
-           
             iter++;
         }
         m_heat_mtux.unlock();
@@ -228,8 +227,12 @@ void RequestManager::CheckAppId(const int &socket, FrontEngine::RequestMessage &
     pCheckAppId = NULL;
 }
 
-void RequestManager::RequestHeartBeat(FrontEngine::RequestMessage &req_message)
+void RequestManager::RequestHeartBeat(const int &socket, FrontEngine::RequestMessage &req_message)
 {
+    if(!CheckClientId(socket, req_message))
+    {
+        return;
+    }
     FrontEngine::HeartBeatRequest* pHeatBeat = req_message.mutable_heart_beat();
     if(pHeatBeat == NULL)
     {
@@ -294,8 +297,12 @@ std::string RequestManager::MakeSdkId(const std::string &sdk_id, const int &sock
     return sdk;
 }
 
-void RequestManager::RequestCreatAccount(FrontEngine::RequestMessage &req_message)
+void RequestManager::RequestCreatAccount(const int &socket, FrontEngine::RequestMessage &req_message)
 {
+    if(!CheckClientId(socket, req_message))
+    {
+        return;
+    }
     FrontEngine::CreateAccountRequest* pCreatAccount = req_message.mutable_account();
     if(pCreatAccount == NULL)
     {
@@ -321,8 +328,12 @@ void RequestManager::RequestCreatAccount(FrontEngine::RequestMessage &req_messag
 #endif
 }
 
-void RequestManager::RequestQueryBalance(FrontEngine::RequestMessage &req_message)
+void RequestManager::RequestQueryBalance(const int &socket, FrontEngine::RequestMessage &req_message)
 {
+    if(!CheckClientId(socket, req_message))
+    {
+        return;
+    }
     FrontEngine::QueryBalanceRequest* pQueryBlance = req_message.mutable_balance();
     if(pQueryBlance == NULL)
     {
@@ -347,8 +358,12 @@ void RequestManager::RequestQueryBalance(FrontEngine::RequestMessage &req_messag
 #endif
 }
 
-void RequestManager::QueryFeeRequest(FrontEngine::RequestMessage &req_message)
+void RequestManager::QueryFeeRequest(const int &socket, FrontEngine::RequestMessage &req_message)
 {
+    if(!CheckClientId(socket, req_message))
+    {
+        return;
+    }
     FrontEngine::QueryFeeRequest* pQueryFee = req_message.mutable_fee();
     if(pQueryFee == NULL)
     {
@@ -372,8 +387,12 @@ void RequestManager::QueryFeeRequest(FrontEngine::RequestMessage &req_message)
 #endif
 }
 
-void RequestManager::RequestQueryOrder(FrontEngine::RequestMessage &req_message)
+void RequestManager::RequestQueryOrder(const int &socket, FrontEngine::RequestMessage &req_message)
 {
+    if(!CheckClientId(socket, req_message))
+    {
+        return;
+    }
     FrontEngine::QueryOrderRequest* pQueryOrder = req_message.mutable_order();
     if(pQueryOrder == NULL)
     {
@@ -398,8 +417,12 @@ void RequestManager::RequestQueryOrder(FrontEngine::RequestMessage &req_message)
 #endif
 }
 
-void RequestManager::RequestQueryOrders(FrontEngine::RequestMessage &req_message)
+void RequestManager::RequestQueryOrders(const int &socket, FrontEngine::RequestMessage &req_message)
 {
+    if(!CheckClientId(socket, req_message))
+    {
+        return;
+    }
     FrontEngine::QueryOrdersRequest* pQueryOrders = req_message.mutable_orders();
     if(pQueryOrders == NULL)
     {
@@ -443,8 +466,12 @@ void RequestManager::RequestQueryOrders(FrontEngine::RequestMessage &req_message
 #endif
 }
 
-void RequestManager::RequestSendCoin(FrontEngine::RequestMessage &req_message)
+void RequestManager::RequestSendCoin(const int &socket, FrontEngine::RequestMessage &req_message)
 {
+    if(!CheckClientId(socket, req_message))
+    {
+        return;
+    }
     FrontEngine::SendCoinRequest* pSendCoin = req_message.mutable_send_info();
     if(pSendCoin == NULL)
     {
@@ -492,8 +519,12 @@ void RequestManager::RequestSendCoin(FrontEngine::RequestMessage &req_message)
 #endif
 }
 
-void RequestManager::RequestRecieveCoin(FrontEngine::RequestMessage &req_message)
+void RequestManager::RequestRecieveCoin(const int &socket, FrontEngine::RequestMessage &req_message)
 {
+    if(!CheckClientId(socket, req_message))
+    {
+        return;
+    }
     FrontEngine::RecieveCoinRequest* pRecieveCoin = req_message.mutable_recieve_info();
     if(pRecieveCoin == NULL)
     {
@@ -577,6 +608,41 @@ bool RequestManager::SetHeartBeatCount(const std::string &sdk_id)
     m_heat_mtux.unlock();
 }
 
+bool RequestManager::CheckClientId(const int &socket, const FrontEngine::RequestMessage &req_message)
+{
+    if(!req_message.client_id().empty())
+    {
+        return true;
+    }
+
+    std::map<FrontEngine::enums_RequestType, FrontEngine::enums_CallBackType> callback_map;
+    callback_map[FrontEngine::enums_RequestType_CreateAccountRequest] = FrontEngine::enums_CallBackType_CreateAccountCallBack;
+    callback_map[FrontEngine::enums_RequestType_QueryBalanceRequest] = FrontEngine::enums_CallBackType_QueryBalanceCallBack;
+    callback_map[FrontEngine::enums_RequestType_QueryFeeRequest] = FrontEngine::enums_CallBackType_QueryFeeCallBack;
+    callback_map[FrontEngine::enums_RequestType_QueryOrderRequest] = FrontEngine::enums_CallBackType_QueryOrderCallBack;
+    callback_map[FrontEngine::enums_RequestType_QueryOrdersRequest] = FrontEngine::enums_CallBackType_QueryOrdersCallBack;
+    callback_map[FrontEngine::enums_RequestType_SendCoinRequest] = FrontEngine::enums_CallBackType_TradedCallBack;
+    callback_map[FrontEngine::enums_RequestType_RecieveCoinRequest] = FrontEngine::enums_CallBackType_TradedCallBack;
+    callback_map[FrontEngine::enums_RequestType_HeartBeatRequest] = FrontEngine::enums_CallBackType_HeartBeatCallBack;
+
+    FrontEngine::CallBackMessage cb_message;
+    cb_message.set_client_id(req_message.client_id());
+    cb_message.set_request_id(req_message.request_id());
+    cb_message.set_front_id(req_message.front_id());
+    cb_message.set_type(callback_map[req_message.type()]);
+
+    char sender_msg[MESSAGE_BODY_SIZE] = { '\0' };
+    cb_message.SerializeToArray(sender_msg, MESSAGE_BODY_SIZE);
+
+    if(m_pCallBack)
+    {
+        m_pCallBack->SetMd5(sender_msg);
+    }
+
+    DataManager::GetInstance()->CBQueuePush(socket, sender_msg);
+    return false;
+}
+
 void RequestManager::CreatAccountCallBack(FrontEngine::RequestMessage &message)
 {
     FrontEngine::CallBackMessage cb_message;
@@ -634,10 +700,10 @@ void RequestManager::QueryBalanceCallBack(FrontEngine::RequestMessage &message)
         pQueryBalance->set_error("pQueryBalance->error");
         if(pCoinCapital)
         {
-           pCoinCapital->set_address("pCoinCapital->address");
-           pCoinCapital->set_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
-           pCoinCapital->set_amount("pCoinCapital->amount");
-           pCoinCapital->set_frozen_amount("pCoinCapital->frozen_amount");
+            pCoinCapital->set_address("pCoinCapital->address");
+            pCoinCapital->set_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
+            pCoinCapital->set_amount("pCoinCapital->amount");
+            pCoinCapital->set_frozen_amount("pCoinCapital->frozen_amount");
         }
     }
 
@@ -669,8 +735,8 @@ void RequestManager::QueryFeeCallBack(FrontEngine::RequestMessage &message)
         pQueryFee->set_request_id("pQueryFee->request_id");
         pQueryFee->set_coin_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
         pQueryFee->set_fee("pQueryFee->fee");
-        pQueryFee->set_errorcode(1003); 
-        pQueryFee->set_error("pQueryFee->error"); 
+        pQueryFee->set_errorcode(1003);
+        pQueryFee->set_error("pQueryFee->error");
     }
 
     if(m_pCallBack)

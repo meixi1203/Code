@@ -164,7 +164,7 @@ std::string DataManager::ClientInfoMapFind(const int &socket)
 
     if(iter != m_client_info.end())
     {
-       ret = iter->second.sdk_id;
+        ret = iter->second.sdk_id;
     }
     //INFO_LOG(" find   sdk_id = " << ret);
 

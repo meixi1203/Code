@@ -117,10 +117,10 @@ TEST(TestCallbackManager, QueryBalanceCallBack)
         pQueryBalance->set_error("pQueryBalance->error");
         if(pCoinCapital)
         {
-           pCoinCapital->set_address("pCoinCapital->address");
-           pCoinCapital->set_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
-           pCoinCapital->set_amount("pCoinCapital->amount");
-           pCoinCapital->set_frozen_amount("pCoinCapital->frozen_amount");
+            pCoinCapital->set_address("pCoinCapital->address");
+            pCoinCapital->set_type(FrontEngine::enums_CoinType::enums_CoinType_ETH);
+            pCoinCapital->set_amount("pCoinCapital->amount");
+            pCoinCapital->set_frozen_amount("pCoinCapital->frozen_amount");
         }
     }
     test.pCbManager->SerializeToArray(cb_message);

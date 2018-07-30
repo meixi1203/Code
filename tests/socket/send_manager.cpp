@@ -43,14 +43,7 @@ void SendManager::HeartBeatHandler()
 {
     while(1)
     {
-        if(!DataManager::GetInstance()->GetSdkId().empty())
-        {
-            ReqHeartBeat();
-        }
-        else
-        {
-            sleep(1);
-        }
+        ReqHeartBeat();
         sleep(3);
     }
 }
@@ -62,16 +55,9 @@ void SendManager::run()
 
     while(1)
     {
-        if(!DataManager::GetInstance()->GetSdkId().empty())
+        for(int v = 0; v < m_reqfun_vec.size(); v++)
         {
-            for(int v = 0; v < m_reqfun_vec.size(); v++)
-            {
-                m_reqfun_vec[v]();
-                sleep(1);
-            }
-        }
-        else
-        {
+            m_reqfun_vec[v]();
             sleep(1);
         }
     }
@@ -257,7 +243,7 @@ void SendManager::ReqQueryBalance()
 
 void SendManager::ReqQueryFee()
 {
-     char sender_msg[MESSAGE_BODY_SIZE] = "";
+    char sender_msg[MESSAGE_BODY_SIZE] = "";
 
     FrontEngine::RequestMessage req_message;
     req_message.set_request_id(ChangeIntToStr());

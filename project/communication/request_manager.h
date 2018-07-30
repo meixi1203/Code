@@ -29,14 +29,15 @@ class RequestManager
     private:
         void SendManage(const char *message);
         void CheckAppId(const int &socket, FrontEngine::RequestMessage &req_message);
-        void RequestHeartBeat(FrontEngine::RequestMessage &req_message);
-        void RequestCreatAccount(FrontEngine::RequestMessage &req_message);
-        void RequestQueryBalance(FrontEngine::RequestMessage &req_message);
-        void QueryFeeRequest(FrontEngine::RequestMessage &req_message);
-        void RequestQueryOrder(FrontEngine::RequestMessage &req_message);
-        void RequestQueryOrders(FrontEngine::RequestMessage &req_message);
-        void RequestSendCoin(FrontEngine::RequestMessage &req_message);
-        void RequestRecieveCoin(FrontEngine::RequestMessage &req_message);
+        void RequestHeartBeat(const int &socket, FrontEngine::RequestMessage &req_message);
+        void RequestCreatAccount(const int &socket, FrontEngine::RequestMessage &req_message);
+        void RequestQueryBalance(const int &socket, FrontEngine::RequestMessage &req_message);
+        void QueryFeeRequest(const int &socket, FrontEngine::RequestMessage &req_message);
+        void RequestQueryOrder(const int &socket, FrontEngine::RequestMessage &req_message);
+        void RequestQueryOrders(const int &socket, FrontEngine::RequestMessage &req_message);
+        void RequestSendCoin(const int &socket, FrontEngine::RequestMessage &req_message);
+        void RequestRecieveCoin(const int &socket, FrontEngine::RequestMessage &req_message);
+        bool CheckClientId(const int &socket, const FrontEngine::RequestMessage &req_message);
         // for tests IF start
         void CreatAccountCallBack(FrontEngine::RequestMessage &message);
         void QueryBalanceCallBack(FrontEngine::RequestMessage &message);

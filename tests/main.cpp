@@ -13,7 +13,7 @@ static void ZmqPub()
 {
     zmq::context_t context(1);
     zmq::socket_t pub(context, ZMQ_PUB);
-    pub.bind("tcp://192.168.111.128:5556");
+    pub.bind("tcp://192.168.1.82:5556");
     char sender_msg[MESSAGE_BODY_SIZE] = "hello world! I'm Pub";
     while(1)
     {
@@ -28,8 +28,8 @@ int main(int argc, char **argv)
 {
     //std::thread pub_ths(ZmqPub);
     //pub_ths.detach();
-    
-    walletfront::SocketClient client ;
+
+    walletfront::SocketClient client;
     walletfront::CallBackManager cb_manager;
     walletfront::SendManager send_mamager;
 
@@ -42,6 +42,6 @@ int main(int argc, char **argv)
     {
         sleep(1);
     }
-    
+
     return 0;
 }

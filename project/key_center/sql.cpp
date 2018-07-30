@@ -35,16 +35,16 @@ void Sql::SqlInit()
         exit(1);
     }
 
-   if(!mysql_real_connect(m_sql_conn, m_server_ip.c_str(), m_user_name.c_str(), m_password.c_str(), m_database_name.c_str(), 3306, NULL, 0))
-   {
+    if(!mysql_real_connect(m_sql_conn, m_server_ip.c_str(), m_user_name.c_str(), m_password.c_str(), m_database_name.c_str(), 3306, NULL, 0))
+    {
         ERROR_LOG("connect error  = "<< mysql_errno(m_sql_conn));
         ERROR_LOG("connect error  = "<< mysql_error(m_sql_conn));
         exit(1);
-   }
-   else
-   {
+    }
+    else
+    {
         //INFO_LOG("Sql connect ok ");
-   }
+    }
 }
 
 //quey

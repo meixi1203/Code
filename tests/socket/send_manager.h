@@ -31,7 +31,7 @@ class SendManager
         void ReqRecieveCoin();
         void HeartBeatHandler();
         std::string ChangeIntToStr();
-        
+
     private:
         SendManager(const SendManager&);
         SendManager& operator=(const SendManager&);
