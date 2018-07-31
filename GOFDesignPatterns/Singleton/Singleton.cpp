@@ -13,11 +13,9 @@ Singleton::~Singleton()
 
 Singleton *Singleton::getInstance()
 {
-    if (!instance)
-    {
-        instance = new Singleton();
-    }
- 
-    return instance;
+    static Singleton *pCon = new Singleton();
+
+    return pCon;
+
 }
 

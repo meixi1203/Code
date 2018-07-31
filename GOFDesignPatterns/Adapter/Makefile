@@ -1,5 +1,5 @@
 CXX = g++
-CFLAGS = -Wall
+CFLAGS = -Wall -g
 LDFLAGS = 
 
 target = _main

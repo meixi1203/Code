@@ -4,10 +4,10 @@
 
 int main()
 {
-    Singleton *s1 = Singleton::getInstance();
-    Singleton *s2 = Singleton::getInstance();
-
-
-    cout << (void *)s1 << endl;
-    cout << (void *)s2 << endl;
+    for(int count = 0; count < 100000; count++)
+    {
+        Singleton *s1 = Singleton::getInstance();
+        cout << (void *)s1 << endl;
+    }
+    return 0;
 }

@@ -1,30 +1,22 @@
 #include "Context.h"
 
-Context::Context()
+Context::Context(State *pState) : m_pState(pState)
 {
-    state = 0;
 }
 
 Context::~Context()
 {
 }
 
-void Context::setState(State *s)
+void Context::Request()
 {
-    state = s;
+    if (m_pState)
+    {
+        m_pState->Handle(this);
+    }
 }
 
-void Context::action1()
+void Context::ChangeState(State *pState)
 {
-    state->action1(this);
-}
-
-void Context::action2()
-{
-    state->action2(this);
-}
-
-void Context::showState()
-{
-    state->showState();
+    m_pState = pState;
 }

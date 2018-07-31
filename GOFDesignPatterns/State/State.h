@@ -3,15 +3,13 @@
 
 class Context;
 
+/*抽象状态类:定义一个接口以封装与Context的一个特定状态相关的行为*/
 class State
 {
-public:
-    State();
-    ~State();
-
-    virtual void action1(Context *c) = 0;
-    virtual void action2(Context *c) = 0;
-    virtual void showState() = 0;
+    public:
+        State();
+        ~State();
+        virtual void Handle(Context *pContext) = 0;
 };
 
 #endif

@@ -3,18 +3,17 @@
 
 #include "State.h"
 
+/*Context类，维护一个ConcreteState子类的实例，这个实例定义当前的状态*/
 class Context
 {
 public:
-    Context();
+    Context(State *pState);
     ~Context();
+    void Request();
+    void ChangeState(State *pState);
 
-    void setState(State *s);
-    void action1();
-    void action2();
-    void showState();
 private:
-    State *state;
+     State *m_pState; //这里的State指针是实现特定状态相关的关键
 };
 
 #endif

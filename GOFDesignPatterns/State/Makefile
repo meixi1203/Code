@@ -3,7 +3,7 @@ CFLAGS = -Wall
 LDFLAGS = 
 
 target = _main
-srcs = main.cpp Context.cpp State.cpp ConcreteState1.cpp ConcreteState2.cpp
+srcs = main.cpp Context.cpp State.cpp ConcreteStateA.cpp ConcreteStateB.cpp
 objs = $(srcs:.cpp=.o)
 headers = $(wildcard *.h)
 

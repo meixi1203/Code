@@ -20,5 +20,7 @@ using std::map;
 
 using std::string;
 
+#define SAFE_DELETE(p) if (p) { delete p; p = NULL; }
+
 #endif
 
